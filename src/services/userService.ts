@@ -7,12 +7,12 @@ export type DefaultResponse = {
 };
 
 type RegisterUserRequest = {
-  name: string;
+  username: string;
   password: string;
 };
 
 type LoginUserRequest = {
-  name: string;
+  username: string;
   password: string;
 };
 
@@ -29,7 +29,7 @@ type CheckUsernameRequest = {
 }
 
 
-export async function createUser(request: RegisterUserRequest): Promise<DefaultResponse> {
+export async function registerUser(request: RegisterUserRequest): Promise<DefaultResponse> {
 
   const response = await postData<RegisterUserRequest>(
     "/register-user",

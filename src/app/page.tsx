@@ -1,4 +1,5 @@
 'use client'
+import Link from "next/link";
 import { useState } from "react";
 
 export default function HomePage() {
@@ -25,6 +26,8 @@ export default function HomePage() {
       <div className="flex flex-col w-[50%] mx-auto h-screen justify-center items-center text-center">
         <h1 className="text-4xl font-bold mb-4">Welcome to CynxHost</h1>
         <button className="animate-bounce text-3xl font-mono bg-gray-300 hover:bg-yellow-100" onClick={onButtonClick}>{buttonText}</button>
+        Homepage soon...
+        <Link href="/auth" className="bg-yellow-300 px-5 rounded hover:bg-yellow-200">Sign In</Link>
       </div>
     </div>
   );

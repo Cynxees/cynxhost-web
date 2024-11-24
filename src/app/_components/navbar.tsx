@@ -10,11 +10,11 @@ const Navbar: React.FC = () => {
           <Link href="/" className='text-white'>
             Home
           </Link>
-            <Link href="/about" className="text-white">
+            {/* <Link href="/about" className="text-white">
             About
-            </Link>
-            <Link href="/services" className="text-white">
-            Services
+            </Link> */}
+            <Link href="/dashboard" className="text-white">
+            Dashboard
             </Link>
             <Link href="/auth" className="text-white">
             Sign In
