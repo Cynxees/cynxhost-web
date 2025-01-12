@@ -39,7 +39,7 @@ export default function AuthPage() {
       (error) => {
         console.error("Username check failed:", error);
         return;
-      },
+      }
     );
     if (!response) return;
 

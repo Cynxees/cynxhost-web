@@ -2,7 +2,7 @@ import { DefaultResponse } from "@/services/userService";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.CYNXHOST_API_URL || "http://localhost:3000/api/v1",
+  baseURL: process.env.CYNXHOST_API_URL || "http://47.129.250.117:3000/api/v1",
   headers: { "Content-Type": "application/json" },
 });
 

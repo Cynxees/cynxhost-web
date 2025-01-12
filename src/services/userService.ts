@@ -32,7 +32,7 @@ type CheckUsernameRequest = {
 export async function registerUser(request: RegisterUserRequest): Promise<DefaultResponse> {
 
   const response = await postData<RegisterUserRequest>(
-    "/register-user",
+    "/user/register",
     request
   );
 
@@ -43,7 +43,7 @@ export async function registerUser(request: RegisterUserRequest): Promise<Defaul
 export async function loginUser(request: LoginUserRequest): Promise<LoginUserResponse> {
 
   const response = await postData<LoginUserRequest, LoginUserResponse>(
-    "/login-user",
+    "/user/login",
     request
   );
 
@@ -54,7 +54,7 @@ export async function loginUser(request: LoginUserRequest): Promise<LoginUserRes
 export async function checkUsername(request: CheckUsernameRequest): Promise<DefaultResponse> {
 
   const response = await postData<CheckUsernameRequest>(
-    "/check-username",
+    "/user/check-username",
     request
   );
 
