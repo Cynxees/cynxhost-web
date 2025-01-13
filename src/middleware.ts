@@ -6,8 +6,8 @@ export function middleware(req: NextRequest) {
   const token = req.cookies.get("accessToken"); // Assuming token is stored in cookies
 
   if (!token) {
-    console.debug("No token found, redirecting to /auth");
-    return NextResponse.redirect(new URL("/auth", req.url));
+    console.debug("No token found, redirecting to /login");
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   console.debug("accessToken: ", token)

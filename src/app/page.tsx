@@ -32,7 +32,7 @@ export default function HomePage() {
         </button>
         Homepage soon...
         <Link
-          href="/auth"
+          href="/login"
           className="bg-yellow-300 px-5 rounded hover:bg-yellow-200"
         >
           Sign In
