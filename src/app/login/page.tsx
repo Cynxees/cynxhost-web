@@ -42,14 +42,15 @@ export default function SignInPage() {
   };
 
   return (
-    <Container size={420} my={40}>
-      <h1 style={{ textAlign: "center" }}>Sign In</h1>
+    <Container size={420} my={20}>
+      <h1 style={{ textAlign: "center" }}>Login</h1>
       <TextInput
         label="Username"
         placeholder="Enter your username"
         value={username}
         onChange={(event) => setUsername(event.currentTarget.value)}
         required
+        mt="md"
       />
       <PasswordInput
         label="Password"
@@ -64,13 +65,19 @@ export default function SignInPage() {
           {authError}
         </Text>
       )}
-      <Group mt="xl">
-        <Button onClick={onClickLogin} color="blue">
-          Sign In
+      <Group justify="center" mt="lg">
+        <Button onClick={onClickLogin} color="blue" size="md" fullWidth>
+          Login
         </Button>
       </Group>
       <Text size="sm" mt="md">
-        Don't have an account? <a href="/register">Register</a>
+        Don't have an account?{" "}
+        <a
+          href="/register"
+          style={{ color: "blue", textDecoration: "underline" }}
+        >
+          Register
+        </a>
       </Text>
     </Container>
   );

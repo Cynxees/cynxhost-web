@@ -11,11 +11,8 @@ const Navbar: React.FC = () => {
           </Link>
         </h1>
         <div className="space-x-4">
-          <Link href="/dashboard" className="text-white">
-            Dashboard
-          </Link>
           <Link href="/login" className="text-white">
-            Sign In
+            Login
           </Link>
         </div>
       </div>

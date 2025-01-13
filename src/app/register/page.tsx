@@ -39,11 +39,11 @@ export default function RegisterPage() {
     }
 
     setAuthError("");
-    router.push("/signin");
+    router.push("/login");
   };
 
   return (
-    <Container size={420} my={40}>
+    <Container size={420} my={20}>
       <h1 style={{ textAlign: "center" }}>Register</h1>
       <TextInput
         label="Username"
@@ -51,6 +51,7 @@ export default function RegisterPage() {
         value={username}
         onChange={(event) => setUsername(event.currentTarget.value)}
         required
+        mt="md"
       />
       <PasswordInput
         label="Password"
@@ -73,13 +74,16 @@ export default function RegisterPage() {
           {authError}
         </Text>
       )}
-      <Group mt="xl">
-        <Button onClick={onClickRegister} color="green">
+      <Group justify="center" mt="lg">
+        <Button onClick={onClickRegister} color="blue" size="md" fullWidth>
           Register
         </Button>
       </Group>
       <Text size="sm" mt="md">
-        Already have an account? <a href="/login">Login</a>
+        Already have an account?{" "}
+        <a href="/login" style={{ color: "blue", textDecoration: "underline" }}>
+          Login
+        </a>
       </Text>
     </Container>
   );
