@@ -5,18 +5,16 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-blue-600 p-3">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 className="text-white text-2xl font-bold">CynxHost</h1>
-        <div className="space-x-4">
+        <h1 className="text-white text-2xl font-bold">
           <Link href="/" className="text-white">
-            Home
+            CynxHost
           </Link>
-          <Link href="/about" className="text-white">
-            About
+        </h1>
+        <div className="space-x-4">
+          <Link href="/dashboard" className="text-white">
+            Dashboard
           </Link>
-          <Link href="/dash" className="text-white">
-            Dash
-          </Link>
-          <Link href="/auth" className="text-white">
+          <Link href="/login" className="text-white">
             Sign In
           </Link>
         </div>
