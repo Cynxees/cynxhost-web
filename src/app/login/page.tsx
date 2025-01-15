@@ -28,57 +28,82 @@ export default function SignInPage() {
 
     if (
       response.code !== "SU" ||
-      !response.data.access_token ||
-      !response.data.token_type
+      !response.data.AccessToken ||
+      !response.data.TokenType
     ) {
       setAuthError("Invalid credentials");
       return;
     }
 
-    document.cookie = `accessToken=${response.data.token_type} ${response.data.access_token}; path=/; secure; SameSite=Strict`;
+    document.cookie = `accessToken=${response.data.TokenType} ${response.data.AccessToken}; path=/; secure; SameSite=Strict`;
+    document.cookie = `username=${username}; path=/; secure; SameSite=Strict`;
+
     setAuthError("");
     console.log("Login successful");
     router.push("/dashboard");
   };
 
   return (
-    <Container size={420} my={20}>
-      <h1 style={{ textAlign: "center" }}>Login</h1>
-      <TextInput
-        label="Username"
-        placeholder="Enter your username"
-        value={username}
-        onChange={(event) => setUsername(event.currentTarget.value)}
-        required
-        mt="md"
-      />
-      <PasswordInput
-        label="Password"
-        placeholder="Enter your password"
-        value={password}
-        onChange={(event) => setPassword(event.currentTarget.value)}
-        required
-        mt="md"
-      />
-      {authError && (
-        <Text color="red" size="sm" mt="sm">
-          {authError}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundColor: "#f0f0f0",
+        height: "calc(100vh - 70px)",
+        width: "100vw",
+      }}
+    >
+      <Container
+        size={420}
+        style={{
+          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          padding: "2rem",
+          borderRadius: "15px",
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+          maxWidth: "400px",
+          width: "100%",
+        }}
+      >
+        <h1 style={{ textAlign: "center" }}>Login</h1>
+        <TextInput
+          label="Username"
+          placeholder="Enter your username"
+          value={username}
+          onChange={(event) => setUsername(event.currentTarget.value)}
+          required
+          mt="lg"
+        />
+        <PasswordInput
+          label="Password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(event) => setPassword(event.currentTarget.value)}
+          required
+          mt="lg"
+        />
+        {authError && (
+          <Text color="red" size="sm" mt="sm">
+            {authError}
+          </Text>
+        )}
+        <Group justify="center" mt="xl">
+          <Button onClick={onClickLogin} color="blue" size="md" fullWidth>
+            Login
+          </Button>
+        </Group>
+        <Text size="sm" mt="lg">
+          Don't have an account?{" "}
+          <a
+            href="/register"
+            style={{ color: "blue", textDecoration: "underline" }}
+          >
+            Register
+          </a>
         </Text>
-      )}
-      <Group justify="center" mt="lg">
-        <Button onClick={onClickLogin} color="blue" size="md" fullWidth>
-          Login
-        </Button>
-      </Group>
-      <Text size="sm" mt="md">
-        Don't have an account?{" "}
-        <a
-          href="/register"
-          style={{ color: "blue", textDecoration: "underline" }}
-        >
-          Register
-        </a>
-      </Text>
-    </Container>
+      </Container>
+    </div>
   );
 }

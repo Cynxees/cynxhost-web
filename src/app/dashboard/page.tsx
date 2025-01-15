@@ -1,12 +1,28 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-export default function DashboardPage() {
+const Dashboard = () => {
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const cookies = document.cookie.split("; ");
+    const usernameCookie = cookies.find((cookie) =>
+      cookie.startsWith("username=")
+    );
+
+    if (usernameCookie) {
+      const username = usernameCookie.split("=")[1];
+      setUsername(username);
+    }
+  }, []);
+
   return (
     <div>
-      <h1>Dashboard</h1>
-      <p>Welcome to your dashboard!</p>
+      <h1>Welcome to your Dashboard, {username ? username : "User"}!</h1>
+      {/* Additional dashboard content */}
     </div>
   );
-}
+};
+
+export default Dashboard;

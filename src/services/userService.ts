@@ -19,8 +19,8 @@ type LoginUserRequest = {
 type LoginUserResponse = DefaultResponse & {
 
   data: {
-    access_token: string;
-    token_type: string;
+    AccessToken: string;
+    TokenType: string;
   }
 }
 
@@ -47,7 +47,7 @@ export async function loginUser(request: LoginUserRequest): Promise<LoginUserRes
     request
   );
 
-  console.log("User logged in:", response);
+  console.log("Login response:", response);
   return response;
 }
 

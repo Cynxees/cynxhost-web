@@ -43,48 +43,75 @@ export default function RegisterPage() {
   };
 
   return (
-    <Container size={420} my={20}>
-      <h1 style={{ textAlign: "center" }}>Register</h1>
-      <TextInput
-        label="Username"
-        placeholder="Enter your username"
-        value={username}
-        onChange={(event) => setUsername(event.currentTarget.value)}
-        required
-        mt="md"
-      />
-      <PasswordInput
-        label="Password"
-        placeholder="Enter your password"
-        value={password}
-        onChange={(event) => setPassword(event.currentTarget.value)}
-        required
-        mt="md"
-      />
-      <PasswordInput
-        label="Confirm Password"
-        placeholder="Confirm your password"
-        value={confirmPassword}
-        onChange={(event) => setConfirmPassword(event.currentTarget.value)}
-        required
-        mt="md"
-      />
-      {authError && (
-        <Text color="red" size="sm" mt="sm">
-          {authError}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundColor: "#f0f0f0",
+        height: "calc(100vh - 70px)",
+        width: "100vw",
+      }}
+    >
+      <Container
+        size={420}
+        my={20}
+        style={{
+          backgroundColor: "rgba(255, 255, 255, 0.9)", // Slight transparency
+          padding: "2rem",
+          borderRadius: "15px",
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+          maxWidth: "400px",
+          width: "100%",
+        }}
+      >
+        <h1 style={{ textAlign: "center" }}>Register</h1>
+        <TextInput
+          label="Username"
+          placeholder="Enter your username"
+          value={username}
+          onChange={(event) => setUsername(event.currentTarget.value)}
+          required
+          mt="md"
+        />
+        <PasswordInput
+          label="Password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(event) => setPassword(event.currentTarget.value)}
+          required
+          mt="md"
+        />
+        <PasswordInput
+          label="Confirm Password"
+          placeholder="Confirm your password"
+          value={confirmPassword}
+          onChange={(event) => setConfirmPassword(event.currentTarget.value)}
+          required
+          mt="md"
+        />
+        {authError && (
+          <Text color="red" size="sm" mt="sm">
+            {authError}
+          </Text>
+        )}
+        <Group justify="center" mt="xl">
+          <Button onClick={onClickRegister} color="blue" size="md" fullWidth>
+            Register
+          </Button>
+        </Group>
+        <Text size="sm" mt="md">
+          Already have an account?{" "}
+          <a
+            href="/login"
+            style={{ color: "blue", textDecoration: "underline" }}
+          >
+            Login
+          </a>
         </Text>
-      )}
-      <Group justify="center" mt="lg">
-        <Button onClick={onClickRegister} color="blue" size="md" fullWidth>
-          Register
-        </Button>
-      </Group>
-      <Text size="sm" mt="md">
-        Already have an account?{" "}
-        <a href="/login" style={{ color: "blue", textDecoration: "underline" }}>
-          Login
-        </a>
-      </Text>
-    </Container>
+      </Container>
+    </div>
   );
 }
