@@ -24,19 +24,15 @@ export default function SignInPage() {
       setAuthError("Login failed, please try again.");
       return null;
     });
+
     if (!response) return;
 
-    if (
-      response.code !== "SU" ||
-      !response.data.AccessToken ||
-      !response.data.TokenType
-    ) {
+    const { code } = response;
+    if (code !== "SU") {
       setAuthError("Invalid credentials");
+      console.debug("Invalid credentials", response);
       return;
     }
-
-    document.cookie = `accessToken=${response.data.TokenType} ${response.data.AccessToken}; path=/; secure; SameSite=Strict`;
-    document.cookie = `username=${username}; path=/; secure; SameSite=Strict`;
 
     setAuthError("");
     console.log("Login successful");

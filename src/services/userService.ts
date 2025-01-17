@@ -16,18 +16,18 @@ type LoginUserRequest = {
   password: string;
 };
 
-type LoginUserResponse = DefaultResponse & {
+type LoginUserResponse = DefaultResponse;
 
+export type GetProfileResponse = DefaultResponse & {
   data: {
-    AccessToken: string;
-    TokenType: string;
-  }
-}
+    Username: string;
+    Coin: number;
+  };
+};
 
 type CheckUsernameRequest = {
   username: string;
 }
-
 
 export async function registerUser(request: RegisterUserRequest): Promise<DefaultResponse> {
 
@@ -59,5 +59,16 @@ export async function checkUsername(request: CheckUsernameRequest): Promise<Defa
   );
 
   console.log("Username checked:", response);
+  return response;
+}
+
+export async function getProfile(): Promise<GetProfileResponse> {
+
+  const response = await postData<null, GetProfileResponse>(
+    "/user/profile",
+    null
+  );
+
+  console.log("Profile:", response);
   return response;
 }
