@@ -51,7 +51,7 @@ export default function RegisterPage() {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundColor: "#f0f0f0",
-        height: "calc(100vh - 70px)",
+        height: "100vh",
         width: "100vw",
       }}
     >
