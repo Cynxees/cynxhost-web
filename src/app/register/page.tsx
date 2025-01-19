@@ -1,27 +1,54 @@
 "use client";
 
-import { useState } from "react";
-import {
-  TextInput,
-  PasswordInput,
-  Button,
-  Group,
-  Container,
-  Text,
-} from "@mantine/core";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { registerUser } from "@/services/userService";
+import { checkUsername, registerUser } from "@/services/userService";
+import {
+  Alert,
+  Button,
+  Card,
+  Code,
+  Divider,
+  Form,
+  Input,
+  Link,
+  Spinner,
+} from "@heroui/react";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [isCheckingUsername, setIsCheckingUsername] = useState(true);
+  const [isUsernameAvailable, setIsUsernameAvailable] = useState(false);
+
   const [authError, setAuthError] = useState("");
+
   const router = useRouter();
 
-  const onClickRegister = async () => {
-    if (password !== confirmPassword) {
-      setAuthError("Passwords do not match");
+  const onUsernameBlur = async () => {
+    if (!username) return;
+
+    setIsCheckingUsername(true);
+    setIsUsernameAvailable(false);
+
+    try {
+      const result = await checkUsername({ username: username });
+      if (result.code === "SU") {
+        setIsUsernameAvailable(true);
+      }
+    } catch (error) {
+      console.error("Error checking username availability:", error);
+      setIsUsernameAvailable(false);
+    } finally {
+      setIsCheckingUsername(false);
+    }
+  };
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!isUsernameAvailable) {
+      setAuthError("Username is already taken");
       return;
     }
 
@@ -43,75 +70,76 @@ export default function RegisterPage() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundColor: "#f0f0f0",
-        height: "100vh",
-        width: "100vw",
-      }}
-    >
-      <Container
-        size={420}
-        my={20}
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.9)", // Slight transparency
-          padding: "2rem",
-          borderRadius: "15px",
-          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-          maxWidth: "400px",
-          width: "100%",
-        }}
-      >
-        <h1 style={{ textAlign: "center" }}>Register</h1>
-        <TextInput
-          label="Username"
-          placeholder="Enter your username"
-          value={username}
-          onChange={(event) => setUsername(event.currentTarget.value)}
-          required
-          mt="md"
-        />
-        <PasswordInput
-          label="Password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(event) => setPassword(event.currentTarget.value)}
-          required
-          mt="md"
-        />
-        <PasswordInput
-          label="Confirm Password"
-          placeholder="Confirm your password"
-          value={confirmPassword}
-          onChange={(event) => setConfirmPassword(event.currentTarget.value)}
-          required
-          mt="md"
-        />
-        {authError && (
-          <Text color="red" size="sm" mt="sm">
-            {authError}
-          </Text>
-        )}
-        <Group justify="center" mt="xl">
-          <Button onClick={onClickRegister} color="blue" size="md" fullWidth>
-            Register
+    <div className="h-screen flex">
+      <Card className="w-96 my-auto justify-center mx-auto p-5">
+        <Form
+          className="w-full max-w-xs"
+          validationBehavior="native"
+          onSubmit={onSubmit}
+          autoComplete="on"
+          method="post"
+        >
+          <h2 className="font-bold text-2xl text-center w-full">Register</h2>
+          <Divider className="mb-2" />
+          <div className="relative w-full">
+            <Input
+              className="w-full"
+              isRequired
+              errorMessage="Please enter a valid username"
+              label="Username"
+              labelPlacement="outside"
+              name="username"
+              placeholder="Enter your username"
+              type="text"
+              onChange={(event) => {
+                setIsCheckingUsername(true);
+                setUsername(event.currentTarget.value);
+              }}
+              onBlur={onUsernameBlur}
+            />
+            {isCheckingUsername && (
+              <Spinner
+                className="absolute right-4 top-1/2 -translate-y-1/2"
+                size="sm"
+                color="current"
+              />
+            )}
+            {isUsernameAvailable === false && (
+              <p className="text-danger text-sm mt-1">
+                Username is already taken
+              </p>
+            )}
+            {isUsernameAvailable === true && (
+              <p className="text-success text-sm mt-1">Username is available</p>
+            )}
+          </div>
+          <Input
+            isRequired
+            errorMessage="Please enter your password"
+            label="Password"
+            labelPlacement="outside"
+            name="password"
+            placeholder="Enter your password"
+            type="password"
+            onChange={(event) => setPassword(event.currentTarget.value)}
+          />
+          <Divider className="my-3" />
+          {authError && (
+            <Alert color="danger" className="w-full">
+              {authError}
+            </Alert>
+          )}
+          <p>
+            Already have an account?{" "}
+            <Link showAnchorIcon href="/login">
+              Login
+            </Link>
+          </p>
+          <Button type="submit" variant="ghost" className="mx-auto w-full">
+            Submit
           </Button>
-        </Group>
-        <Text size="sm" mt="md">
-          Already have an account?{" "}
-          <a
-            href="/login"
-            style={{ color: "blue", textDecoration: "underline" }}
-          >
-            Login
-          </a>
-        </Text>
-      </Container>
+        </Form>
+      </Card>
     </div>
   );
 }
