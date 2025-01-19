@@ -44,13 +44,6 @@ const Navbar: React.FC = () => {
         }
       );
 
-      document.cookie =
-        "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie =
-        "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie =
-        "coins=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
       setProfile(null);
       router.push("/");
     } catch (error: unknown) {
@@ -86,7 +79,7 @@ const Navbar: React.FC = () => {
               {/* Logged-In User Info */}
               <div className="flex items-center space-x-4">
                 <img
-                  src="/path-to-profile-picture.jpg" // Replace with dynamic profile picture if available
+                  src="profile.png" // Replace with dynamic profile picture if available
                   alt="Profile"
                   className="w-8 h-8 rounded-full"
                 />

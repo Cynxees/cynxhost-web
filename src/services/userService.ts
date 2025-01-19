@@ -1,10 +1,5 @@
 import { postData } from "@/lib/fetcher";
-
-export type DefaultResponse = {
-  code: string;
-  codename: string;
-  data?: Record<string, unknown>;
-};
+import { BaseResponse } from "./model/response";
 
 type RegisterUserRequest = {
   username: string;
@@ -16,21 +11,20 @@ type LoginUserRequest = {
   password: string;
 };
 
-type LoginUserResponse = DefaultResponse;
+type LoginUserResponse = BaseResponse;
 
-export type GetProfileResponse = DefaultResponse & {
-  data: {
-    Username: string;
-    Coin: number;
-  };
-};
+export type GetProfileResponse = BaseResponse<{
+  Username: string;
+  Coin: number;
+}>;
 
 type CheckUsernameRequest = {
   username: string;
-}
+};
 
-export async function registerUser(request: RegisterUserRequest): Promise<DefaultResponse> {
-
+export async function registerUser(
+  request: RegisterUserRequest
+): Promise<BaseResponse> {
   const response = await postData<RegisterUserRequest>(
     "/user/register",
     request
@@ -40,8 +34,9 @@ export async function registerUser(request: RegisterUserRequest): Promise<Defaul
   return response;
 }
 
-export async function loginUser(request: LoginUserRequest): Promise<LoginUserResponse> {
-
+export async function loginUser(
+  request: LoginUserRequest
+): Promise<LoginUserResponse> {
   const response = await postData<LoginUserRequest, LoginUserResponse>(
     "/user/login",
     request
@@ -51,8 +46,9 @@ export async function loginUser(request: LoginUserRequest): Promise<LoginUserRes
   return response;
 }
 
-export async function checkUsername(request: CheckUsernameRequest): Promise<DefaultResponse> {
-
+export async function checkUsername(
+  request: CheckUsernameRequest
+): Promise<BaseResponse> {
   const response = await postData<CheckUsernameRequest>(
     "/user/check-username",
     request
@@ -63,7 +59,6 @@ export async function checkUsername(request: CheckUsernameRequest): Promise<Defa
 }
 
 export async function getProfile(): Promise<GetProfileResponse> {
-
   const response = await postData<null, GetProfileResponse>(
     "/user/profile",
     null

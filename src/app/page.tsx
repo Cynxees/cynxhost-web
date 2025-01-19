@@ -33,13 +33,21 @@ export default function HomePage() {
             >
               {buttonText}
             </Button>
-            Homepage soon...
-            <Link
-              href="/login"
-              className="bg-yellow-300 px-5 rounded hover:bg-yellow-200 bg-opacity-30 hover:bg-opacity-30"
-            >
-              Sign In
-            </Link>
+
+            <div className="flex gap-3 m-5">
+              <Link
+                href="/login"
+                className="bg-yellow-300 p-3 rounded hover:bg-yellow-200 bg-opacity-30 hover:bg-opacity-30"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/onboarding"
+                className="bg-yellow-300 p-3 rounded hover:bg-yellow-200 bg-opacity-30 hover:bg-opacity-30"
+              >
+                Onboarding
+              </Link>
+            </div>
           </div>
         </div>
       </main>
