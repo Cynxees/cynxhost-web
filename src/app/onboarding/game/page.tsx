@@ -4,10 +4,22 @@ import { useEffect, useState } from "react";
 import { paginateServerCategory } from "@/services/serverTemplateService";
 import { ServerTemplateCategory } from "@/services/entity/entity";
 import { Spinner, Card, Divider } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import { useOnboarding } from "../context";
 
-export default function OnboardingPage() {
+export default function OnboardingGamePage() {
   const [categories, setCategories] = useState<ServerTemplateCategory[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { state, setState } = useOnboarding();
+
+  useEffect(() => {
+    setState({
+      ...state,
+      title: "Choose your game",
+      step: 1,
+    });
+  }, []);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -28,14 +40,26 @@ export default function OnboardingPage() {
     setLoading(true);
 
     try {
-      if (category.ServerTemplateId == null) {
-        const result = await paginateServerCategory({
-          page: 1,
-          size: 10,
-          Id: category.Id,
-        });
-        setCategories(result.data?.ServerTemplateCategories || []);
+      if (category.ServerTemplateId != null) {
+        // Redirect to the server template page
+        console.log(
+          "Redirecting to server template page:",
+          category.ServerTemplateId
+        );
+        router.push(
+          `/onboarding/game-detail?id=${encodeURIComponent(
+            category.ServerTemplateId
+          )}`
+        );
+
+        return;
       }
+      const result = await paginateServerCategory({
+        page: 1,
+        size: 10,
+        Id: category.Id,
+      });
+      setCategories(result.data?.ServerTemplateCategories || []);
     } catch (error) {
       console.error("Error selecting category:", error);
     } finally {

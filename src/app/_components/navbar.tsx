@@ -3,7 +3,11 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { getProfile, GetProfileResponse } from "@/services/userService";
+import {
+  getProfile,
+  GetProfileResponse,
+  logoutUser,
+} from "@/services/userService";
 import axios from "axios";
 
 const Navbar: React.FC = () => {
@@ -36,13 +40,7 @@ const Navbar: React.FC = () => {
   const handleLogout = async () => {
     try {
       // Hit the logout endpoint
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_PATH}/user/logout`,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
+      logoutUser();
 
       setProfile(null);
       router.push("/");
@@ -61,49 +59,37 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className={"bg-blue-700 py-4 px-20"}>
-      <div className="w-full flex justify-between items-center">
-        {/* Logo */}
-        <h1 className="text-white text-2xl font-bold">
-          <Link href="/" className="text-white">
+    <nav className="bg-transparent top-0 left-0 w-full z-10 shadow-lg">
+      <div className="bg-foreground py-6 rounded-3xl">
+        <div className="flex justify-between items-center max-w-screen-xl mx-auto">
+          {/* Logo or brand name */}
+          <Link href="/" className=" text-xl font-semibold">
             CynxHost
           </Link>
-        </h1>
 
-        {/* Navigation Section */}
-        <div className="space-x-4 flex items-center">
-          {loading ? (
-            <span className="text-white">Loading...</span>
-          ) : profile ? (
-            <>
-              {/* Logged-In User Info */}
-              <div className="flex items-center space-x-4">
-                <img
-                  src="profile.png" // Replace with dynamic profile picture if available
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full"
-                />
-                <div>
-                  <p className="text-white font-semibold">{profile.Username}</p>
-                  <p className="text-yellow-300 text-sm">
-                    {profile.Coin} Coins
-                  </p>
-                </div>
-              </div>
-
-              {/* Logout Button */}
-              <button
-                onClick={handleLogout}
-                className="text-white bg-red-500 px-4 py-2 rounded"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <Link href="/login" className="text-white">
-              Login
+          {/* Navigation links */}
+          <div className="space-x-4">
+            <Link href="/onboarding/game" className="">
+              Dashboard
             </Link>
-          )}
+
+            {loading ? (
+              "loading"
+            ) : profile ? (
+              <>
+                <Link href="/profile" className="">
+                  {profile?.Username}
+                </Link>
+                <button onClick={handleLogout} className="">
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link href="/login" className="">
+                Login
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </nav>

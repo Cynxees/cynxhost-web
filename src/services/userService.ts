@@ -46,6 +46,15 @@ export async function loginUser(
   return response;
 }
 
+export async function logoutUser(): Promise<BaseResponse> {
+  const response = await postData<LoginUserRequest, LoginUserResponse>(
+    "/user/logout"
+  );
+
+  console.log("Logout response:", response);
+  return response;
+}
+
 export async function checkUsername(
   request: CheckUsernameRequest
 ): Promise<BaseResponse> {

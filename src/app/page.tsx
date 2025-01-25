@@ -24,29 +24,11 @@ export default function HomePage() {
   return (
     <HeroUIProvider>
       <main className="">
-        <div className="min-h-screen">
-          <div className="flex flex-col w-[50%] mx-auto h-screen justify-center items-center text-center">
-            <h1 className="text-4xl font-bold mb-4">Welcome to CynxHost</h1>
-            <Button
-              className="animate-bounce text-3xl font-mono bg-gray-300 hover:bg-yellow-100 bg-opacity-30 hover:bg-opacity-30"
-              onClick={onButtonClick}
-            >
-              {buttonText}
-            </Button>
-
-            <div className="flex gap-3 m-5">
-              <Link
-                href="/login"
-                className="bg-yellow-300 p-3 rounded hover:bg-yellow-200 bg-opacity-30 hover:bg-opacity-30"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/onboarding"
-                className="bg-yellow-300 p-3 rounded hover:bg-yellow-200 bg-opacity-30 hover:bg-opacity-30"
-              >
-                Onboarding
-              </Link>
+        <div>
+          <div>
+            <div>
+              <Link href="/login">Sign In</Link>
+              <Link href="/onboarding/game">Onboarding</Link>
             </div>
           </div>
         </div>
