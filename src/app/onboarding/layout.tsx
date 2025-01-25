@@ -4,6 +4,7 @@
 import { ReactNode } from "react";
 import { OnboardingProvider, useOnboarding } from "./context"; // Import provider and hook
 import { Button, Divider, Progress } from "@heroui/react";
+import { ArrowLeft } from "solar-icon-set";
 
 export default function OnboardingLayout({
   children,
@@ -12,8 +13,6 @@ export default function OnboardingLayout({
 }) {
   return (
     <OnboardingProvider>
-      {" "}
-      {/* Wrap the entire onboarding flow */}
       <OnboardingLayoutContent>{children}</OnboardingLayoutContent>
     </OnboardingProvider>
   );
@@ -25,13 +24,14 @@ function OnboardingLayoutContent({ children }: { children: ReactNode }) {
   const totalSteps = 3;
 
   return (
-    <div className="">
-      <Progress className="" value={(state.step / totalSteps) * 100} />
+    <div className="flex flex-col gap-4">
+      <Progress className="bg-secondary" color="primary" value={(state.step / totalSteps) * 100} />
 
-      <div className="flex">
-        <Button variant="ghost"></Button>
-        {state.title && <h1 className="">{state.title}</h1>}
+      <div className="flex flex-row gap-2 h-10">
+        <ArrowLeft className="my-auto" size={30} />
+        {state.title && <h1 className="my-auto">{state.title}</h1>}
       </div>
+
       <Divider className="w-full h-0.5"></Divider>
       <div className="">{children}</div>
     </div>
