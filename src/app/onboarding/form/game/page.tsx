@@ -1,19 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { paginateServerCategory } from "@/services/serverTemplateService";
-import { ServerTemplateCategory } from "@/services/entity/entity";
-import {
-  Spinner,
-  Card,
-  Divider,
-  Breadcrumbs,
-  BreadcrumbItem,
-} from "@heroui/react";
-import { useRouter } from "next/navigation";
-import { useOnboarding } from "../context";
 import GameCard from "@/app/_components/onboarding/gameCard";
+import { ServerTemplateCategory } from "@/services/entity/entity";
+import { paginateServerCategory } from "@/services/serverTemplateService";
+import { BreadcrumbItem, Breadcrumbs, Divider, Spinner } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ArrowLeft } from "solar-icon-set";
+import { useOnboarding } from "../../context";
 
 export default function OnboardingGamePage() {
   const [parentHistory, setParentHistory] = useState<ServerTemplateCategory[]>(
@@ -58,6 +52,7 @@ export default function OnboardingGamePage() {
   }, [state]);
 
   const changeCategory = async (category?: ServerTemplateCategory) => {
+    setCategories([]);
     setState({
       ...state,
       selectedCategory: category,
@@ -74,10 +69,9 @@ export default function OnboardingGamePage() {
           "Redirecting to server template page:",
           category.ServerTemplateId
         );
-        changeCategory(category);
 
         router.push(
-          `/onboarding/game-detail?id=${encodeURIComponent(
+          `/onboarding/form/game-detail?id=${encodeURIComponent(
             category.ServerTemplateId
           )}`
         );
@@ -121,7 +115,12 @@ export default function OnboardingGamePage() {
     <>
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-row gap-2 h-10">
-          <ArrowLeft className="my-auto" size={30} onClick={onClickBack} />
+          <ArrowLeft
+            className="mt-auto cursor-pointer hover:scale-105"
+            size={30}
+            onClick={onClickBack}
+            color="cyan"
+          />
           {state.title && <h1 className="my-auto">{state.title}</h1>}
         </div>
         {parentHistory.length > 0 && (
@@ -129,7 +128,9 @@ export default function OnboardingGamePage() {
             {parentHistory.map((category) => (
               <BreadcrumbItem
                 key={category.Id}
-                onClick={() => onClickBreadcrumb(parentHistory.indexOf(category))}
+                onClick={() =>
+                  onClickBreadcrumb(parentHistory.indexOf(category))
+                }
                 className="cursor-pointer"
               >
                 {category.Name}

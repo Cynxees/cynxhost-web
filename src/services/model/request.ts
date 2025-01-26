@@ -3,3 +3,7 @@ export type BasePaginateRequest = {
   size: number;
   keyword?: string;
 };
+
+export type IdRequest = {
+  Id: number;
+};

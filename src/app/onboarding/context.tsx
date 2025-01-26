@@ -5,7 +5,7 @@ import {
   ServerTemplate,
   ServerTemplateCategory,
 } from "@/services/entity/entity";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useMemo } from "react";
 
 // Define the shared state type
 interface OnboardingState {
@@ -23,17 +23,22 @@ const OnboardingContext = createContext<{
 
 // Context Provider component
 export function OnboardingProvider({ children }: { children: ReactNode }) {
+  console.log("OnboardingProvider");
+
   const [state, setState] = useState<OnboardingState>({
     title: "",
     step: 1,
   });
 
+  const value = useMemo(() => ({ state, setState }), [state]);
+
   return (
-    <OnboardingContext.Provider value={{ state, setState }}>
+    <OnboardingContext.Provider value={value}>
       {children}
     </OnboardingContext.Provider>
   );
 }
+
 
 // Custom hook to use onboarding context
 export const useOnboarding = () => {

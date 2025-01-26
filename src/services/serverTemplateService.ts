@@ -1,6 +1,6 @@
 import { postData } from "@/lib/fetcher";
-import { ServerTemplateCategory } from "./entity/entity";
-import { BasePaginateRequest } from "./model/request";
+import { ServerTemplate, ServerTemplateCategory } from "./entity/entity";
+import { BasePaginateRequest, IdRequest } from "./model/request";
 import { BaseResponse } from "./model/response";
 
 type PaginateServerTemplateCategoryRequest = BasePaginateRequest & {
@@ -9,6 +9,10 @@ type PaginateServerTemplateCategoryRequest = BasePaginateRequest & {
 
 type PaginateServerTemplateCategoryResponse = BaseResponse<{
   ServerTemplateCategories: ServerTemplateCategory[];
+}>;
+
+type GetServerTemplateByIdResponse = BaseResponse<{
+  ServerTemplate: ServerTemplate;
 }>;
 
 export async function paginateServerCategory(
@@ -20,5 +24,17 @@ export async function paginateServerCategory(
   >("/server-template/paginate-categories", request);
 
   console.log("/server-template/paginate-categories", response);
+  return response;
+}
+
+export async function getServerTemplateById(
+  req: IdRequest
+): Promise<GetServerTemplateByIdResponse> {
+  const response = await postData<IdRequest, GetServerTemplateByIdResponse>(
+    "/server-template/detail",
+    req
+  );
+
+  console.log("getServerTemplateById", response);
   return response;
 }

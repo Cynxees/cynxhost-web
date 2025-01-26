@@ -27,6 +27,13 @@ export interface ServerTemplate {
   MinimumCpu: number;
   MinimumDisk: number;
   ImageUrl?: string;
+  Variables?: Array<{
+    Name: string;
+    Type: string;
+    Content: Array<{
+      Name: string;
+    }>;
+  }>;
 }
 
 export interface ServerTemplateCategory {
