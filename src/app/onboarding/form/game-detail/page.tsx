@@ -2,23 +2,25 @@
 
 import { ServerTemplate } from "@/services/entity/entity";
 import { getServerTemplateById } from "@/services/serverTemplateService";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useOnboarding } from "../../context";
 import {
   Divider,
-  Dropdown,
-  DropdownItem,
   Select,
   SelectItem,
-  Slider,
+  Slider
 } from "@heroui/react";
-
-export const pageMetadata = {
-  title: "Game Details",
-};
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useOnboarding } from "../../context";
 
 export default function OnboardingGameDetailPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GameDetailContent />
+    </Suspense>
+  );
+}
+
+function GameDetailContent() {
   const searchParams = useSearchParams();
   const parentId = parseInt(searchParams.get("id") || "0") || null;
 
@@ -36,26 +38,15 @@ export default function OnboardingGameDetailPage() {
   }, [selectedGame]);
 
   useEffect(() => {
-    if (!parentId) {
-      return;
-    }
-
-    getServerTemplateById({
-      Id: parentId,
-    }).then((response) => {
-      console.log("Selected game:", response);
-
-      if (!response.data?.ServerTemplate) {
-        return;
+    if (!parentId) return;
+    getServerTemplateById({ Id: parentId }).then((response) => {
+      if (response.data?.ServerTemplate) {
+        setSelectedGame(response.data?.ServerTemplate);
+        setState({ ...state, selectedGame: response.data?.ServerTemplate });
       }
-
-      setState({
-        ...state,
-        selectedGame: response.data?.ServerTemplate,
-      });
-      setSelectedGame(response.data?.ServerTemplate);
     });
   }, [parentId]);
+  
 
   if (selectedGame == null) {
     return <div>Loading...</div>;
@@ -75,6 +66,7 @@ export default function OnboardingGameDetailPage() {
             className="w-72"
             label={variable.Name}
             placeholder={"Select " + variable.Name}
+            aria-label={`Select ${variable.Name}`}
           >
             {variable.Content.map((content) => (
               <SelectItem key={content.Name} className="bg-foreground">
@@ -92,6 +84,7 @@ export default function OnboardingGameDetailPage() {
         <Slider
           value={selectedStorageSize}
           label="Storage Size"
+          aria-label="Storage Size"
           onChange={(value) =>
             setSelectedStorageSize(Array.isArray(value) ? value[0] : value)
           }
