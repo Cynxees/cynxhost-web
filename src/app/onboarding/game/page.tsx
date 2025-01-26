@@ -6,6 +6,8 @@ import { ServerTemplateCategory } from "@/services/entity/entity";
 import { Spinner, Card, Divider } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useOnboarding } from "../context";
+import GameCard from "@/app/_components/onboarding/gameCard";
+import { ArrowLeft } from "solar-icon-set";
 
 export default function OnboardingGamePage() {
   const [categories, setCategories] = useState<ServerTemplateCategory[]>([]);
@@ -67,6 +69,8 @@ export default function OnboardingGamePage() {
     }
   };
 
+  const onClickBack = () => {};
+
   if (loading) {
     return (
       <div className="h-screen flex justify-center items-center">
@@ -76,25 +80,23 @@ export default function OnboardingGamePage() {
   }
 
   return (
-    <div className="h-screen flex flex-col items-center">
-      <h1 className="text-3xl font-bold my-4">Server Template Categories</h1>
-      <Divider className="mb-4" />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {categories.map((category) => (
-          <Card
-            isPressable
-            key={category.Id}
-            className="p-4 cursor-pointer"
-            onPress={() => {
-              console.log("Category clicked:", category);
-              onClickCategory(category);
-            }}
-          >
-            <h2 className="text-xl font-semibold">{category.Name}</h2>
-            <p>{category.Description}</p>
-          </Card>
-        ))}
+    <>
+      <div className="flex flex-row gap-2 h-10">
+        <ArrowLeft className="my-auto" size={30} onClick={onClickBack} />
+        {state.title && <h1 className="my-auto">{state.title}</h1>}
       </div>
-    </div>
+      <Divider className="w-full h-0.5 my-4"></Divider>
+      <div className="h-screen flex flex-col items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map((category) => (
+            <GameCard
+              key={category.Id}
+              game={category}
+              onClick={onClickCategory}
+            />
+          ))}
+        </div>
+      </div>
+    </>
   );
 }

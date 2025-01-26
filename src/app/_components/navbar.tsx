@@ -61,9 +61,9 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-transparent top-0 left-0 w-full z-10 shadow-lg">
       <div className="bg-foreground py-6 rounded-3xl">
-        <div className="flex justify-between items-center max-w-screen-xl mx-auto">
+        <div className="flex justify-between items-center w-full px-10">
           {/* Logo or brand name */}
-          <Link href="/" className=" text-xl font-semibold">
+          <Link href="/" className=" text-3xl font-extrabold">
             CynxHost
           </Link>
 
@@ -80,9 +80,6 @@ const Navbar: React.FC = () => {
                 <Link href="/profile" className="">
                   {profile?.Username}
                 </Link>
-                <button onClick={handleLogout} className="">
-                  Logout
-                </button>
               </>
             ) : (
               <Link href="/login" className="">
