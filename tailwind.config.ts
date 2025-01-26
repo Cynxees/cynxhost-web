@@ -1,5 +1,5 @@
-import type { Config } from "tailwindcss";
 import { heroui } from "@heroui/react";
+import type { Config } from "tailwindcss";
 import { CustomLayoutTheme, DarkColorTheme } from "./config/theme";
 
 export default {
@@ -12,6 +12,15 @@ export default {
   theme: {
     extend: {
       colors: DarkColorTheme,
+      animation: {
+        "pulse-brightness": "pulse-brightness 6s ease-in-out infinite",
+      },
+      keyframes: {
+        "pulse-brightness": {
+          "0%, 100%": { filter: "brightness(0.1)" },
+          "50%": { filter: "brightness(0.3)" },
+        },
+      },
     },
   },
   darkMode: "class",

@@ -1,11 +1,11 @@
 // app/onboarding/layout.tsx
 "use client";
 
-import { ReactNode } from "react";
-import { OnboardingProvider, useOnboarding } from "../context"; // Import provider and hook
 import { Divider, Progress } from "@heroui/react";
-import { ArrowLeft } from "solar-icon-set";
 import { useRouter } from "next/navigation";
+import { ReactNode } from "react";
+import { ArrowLeft } from "solar-icon-set";
+import { OnboardingProvider, useOnboarding } from "../context"; // Import provider and hook
 
 export default function OnboardingFormLayout({
   children,
@@ -19,17 +19,31 @@ export default function OnboardingFormLayout({
   );
 }
 
-const stepRoutes: { [key: number]: string } = {
-  1: "/onboarding/form/game",
-  2: "/onboarding/form/game-detail",
-  3: "/onboarding/form/confirm",
-};
+type Route = {
+  route: string;
+  text: string;
+}
+
+const stepRoutes: Route[] = [
+  {
+    route: "/onboarding/form/game",
+    text: "Game",
+  },
+  {
+    route: "/onboarding/form/game-detail",
+    text: "Game Details",
+  },
+  {
+    route: "/onboarding/form/confirm",
+    text: "Confirm",
+  },
+];
 
 function OnboardingLayoutContent({ children }: { children: ReactNode }) {
   const { state, setState } = useOnboarding(); // Use the context hook to get title or state
   const router = useRouter();
 
-  const totalSteps = 3;
+  const totalSteps = stepRoutes.length;
 
   const onClickBack = () => {
     // Go back to the previous step
@@ -46,19 +60,24 @@ function OnboardingLayoutContent({ children }: { children: ReactNode }) {
     });
 
     // Redirect to the previous page
-    router.push(stepRoutes[currentStep]);
+    router.push(stepRoutes[currentStep - 1].route);
   };
 
   return (
     <div className="flex flex-col gap-6 pt-6">
-      <Progress
-        className="bg-foreground"
-        color="primary"
-        value={(state.step / totalSteps) * 100}
-        classNames={{
-          track: "",
-        }}
-      />
+      
+
+      <div>
+        <Progress
+          about="Progress bar"
+          className="bg-foreground"
+          value={(state.step / totalSteps) * 100}
+          classNames={{
+            track: "",
+            indicator: "bg-gradient-to-r from-secondary to-primary",
+          }}
+        />
+      </div>
 
       {state.step === 1 ? (
         ""
