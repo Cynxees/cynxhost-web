@@ -1,10 +1,5 @@
 import { postData } from "@/lib/fetcher";
-
-export type DefaultResponse = {
-  code: string;
-  codename: string;
-  data?: Record<string, unknown>;
-};
+import { BaseResponse } from "./model/response";
 
 type RegisterUserRequest = {
   username: string;
@@ -16,23 +11,22 @@ type LoginUserRequest = {
   password: string;
 };
 
-type LoginUserResponse = DefaultResponse & {
+type LoginUserResponse = BaseResponse;
 
-  data: {
-    access_token: string;
-    token_type: string;
-  }
-}
+export type GetProfileResponse = BaseResponse<{
+  Username: string;
+  Coin: number;
+}>;
 
 type CheckUsernameRequest = {
   username: string;
-}
+};
 
-
-export async function registerUser(request: RegisterUserRequest): Promise<DefaultResponse> {
-
+export async function registerUser(
+  request: RegisterUserRequest
+): Promise<BaseResponse> {
   const response = await postData<RegisterUserRequest>(
-    "/register-user",
+    "/user/register",
     request
   );
 
@@ -40,24 +34,45 @@ export async function registerUser(request: RegisterUserRequest): Promise<Defaul
   return response;
 }
 
-export async function loginUser(request: LoginUserRequest): Promise<LoginUserResponse> {
-
+export async function loginUser(
+  request: LoginUserRequest
+): Promise<LoginUserResponse> {
   const response = await postData<LoginUserRequest, LoginUserResponse>(
-    "/login-user",
+    "/user/login",
     request
   );
 
-  console.log("User logged in:", response);
+  console.log("Login response:", response);
   return response;
 }
 
-export async function checkUsername(request: CheckUsernameRequest): Promise<DefaultResponse> {
+export async function logoutUser(): Promise<BaseResponse> {
+  const response = await postData<LoginUserRequest, LoginUserResponse>(
+    "/user/logout"
+  );
 
+  console.log("Logout response:", response);
+  return response;
+}
+
+export async function checkUsername(
+  request: CheckUsernameRequest
+): Promise<BaseResponse> {
   const response = await postData<CheckUsernameRequest>(
-    "/check-username",
+    "/user/check-username",
     request
   );
 
   console.log("Username checked:", response);
+  return response;
+}
+
+export async function getProfile(): Promise<GetProfileResponse> {
+  const response = await postData<null, GetProfileResponse>(
+    "/user/profile",
+    null
+  );
+
+  console.log("Profile:", response);
   return response;
 }

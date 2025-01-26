@@ -1,12 +1,30 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getProfile, GetProfileResponse } from "@/services/userService";
 
-export default function DashboardPage() {
+const Dashboard = () => {
+  const [profile, setProfile] = useState<GetProfileResponse['data']>();
+  const [loading, isLoading] = useState(true);
+
+  useEffect(() => {
+    getProfile().then((profile) => {
+      setProfile(profile.data);
+      isLoading(false);
+    });
+  }, []);
+
+  if(loading || !profile) {
+    return <div className="text-xl">Loading...</div>;
+  }
+
   return (
     <div>
-      <h1>Dashboard</h1>
-      <p>Welcome to your dashboard!</p>
+      <h1>Welcome to your Dashboard, {profile.Username}!</h1>
+      <h2>Coin: {profile.Coin}</h2>
+      {/* Additional dashboard content */}
     </div>
   );
-}
+};
+
+export default Dashboard;
