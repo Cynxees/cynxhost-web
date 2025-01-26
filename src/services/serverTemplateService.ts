@@ -1,6 +1,10 @@
 import { postData } from "@/lib/fetcher";
 import { ServerTemplate, ServerTemplateCategory } from "./entity/entity";
-import { BasePaginateRequest, IdRequest } from "./model/request";
+import {
+  BasePaginateRequest,
+  IdRequest,
+  ValidateServerTemplateVariablesRequest,
+} from "./model/request";
 import { BaseResponse } from "./model/response";
 
 type PaginateServerTemplateCategoryRequest = BasePaginateRequest & {
@@ -36,5 +40,17 @@ export async function getServerTemplateById(
   );
 
   console.log("getServerTemplateById", response);
+  return response;
+}
+
+export async function validateServerTemplateVariables(
+  request: ValidateServerTemplateVariablesRequest
+): Promise<BaseResponse> {
+  const response = await postData<
+    ValidateServerTemplateVariablesRequest,
+    BaseResponse
+  >("/server-template/validate-variables", request);
+
+  console.log("/server-template/validate-variables", response);
   return response;
 }

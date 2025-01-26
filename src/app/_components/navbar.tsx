@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-transparent top-0 left-0 w-full z-10 shadow-lg relative z-50">
+    <nav className="bg-transparent top-0 left-0 w-full shadow-lg relative z-50">
       <div className="bg-foreground py-6 rounded-3xl">
         <div className="flex justify-between items-center w-full px-10">
           {/* Logo or brand name */}
@@ -69,7 +69,11 @@ const Navbar: React.FC = () => {
 
           {/* Navigation links */}
           <div className="space-x-4">
-            <Link href="/onboarding/game" className="">
+            <Link href="/onboarding/form/game" className="">
+              Onboarding
+            </Link>
+
+            <Link href="/dashboard" className="">
               Dashboard
             </Link>
 
@@ -77,7 +81,7 @@ const Navbar: React.FC = () => {
               "loading"
             ) : profile ? (
               <>
-                <Link href="/profile" className="">
+                <Link href="/login" className="">
                   {profile?.Username}
                 </Link>
               </>

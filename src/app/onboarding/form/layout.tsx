@@ -3,7 +3,7 @@
 
 import { Divider, Progress } from "@heroui/react";
 import { useRouter } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { ArrowLeft } from "solar-icon-set";
 import { OnboardingProvider, useOnboarding } from "../context"; // Import provider and hook
 
@@ -19,31 +19,34 @@ export default function OnboardingFormLayout({
   );
 }
 
-type Route = {
+type Step = {
   route: string;
   text: string;
-}
+  percent: number;
+};
 
-const stepRoutes: Route[] = [
+const steps: Step[] = [
   {
     route: "/onboarding/form/game",
     text: "Game",
+    percent: 10,
   },
   {
     route: "/onboarding/form/game-detail",
     text: "Game Details",
+    percent: 50,
   },
   {
     route: "/onboarding/form/confirm",
     text: "Confirm",
+    percent: 75,
   },
 ];
 
 function OnboardingLayoutContent({ children }: { children: ReactNode }) {
-  const { state, setState } = useOnboarding(); // Use the context hook to get title or state
-  const router = useRouter();
+  const { state, setState } = useOnboarding();
 
-  const totalSteps = stepRoutes.length;
+  const router = useRouter();
 
   const onClickBack = () => {
     // Go back to the previous step
@@ -60,23 +63,37 @@ function OnboardingLayoutContent({ children }: { children: ReactNode }) {
     });
 
     // Redirect to the previous page
-    router.push(stepRoutes[currentStep - 1].route);
+    router.push(steps[currentStep - 1].route);
   };
 
   return (
     <div className="flex flex-col gap-6 pt-6">
-      
-
-      <div>
+      <div className="flex flex-col gap-2 w-full">
         <Progress
           about="Progress bar"
           className="bg-foreground"
-          value={(state.step / totalSteps) * 100}
+          value={steps[state.step - 1].percent}
           classNames={{
             track: "",
             indicator: "bg-gradient-to-r from-secondary to-primary",
           }}
         />
+        <div className="relative">
+          <div className="absolute top-0 left-0 flex w-full justify-between text-sm text-center text-muted-foreground">
+            {steps.map((step, index) => (
+              <div
+                key={index}
+                style={{
+                  left: `${step.percent}%`,
+                  transform: index === 0 ? "translateX(0)" : "translateX(-50%)",
+                }}
+                className="absolute"
+              >
+                {step.text}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {state.step === 1 ? (

@@ -23,16 +23,7 @@ export default function HomePage() {
 
   return (
     <HeroUIProvider>
-      <main className="">
-        <div>
-          <div>
-            <div>
-              <Link href="/login">Sign In</Link>
-              <Link href="/onboarding/form/game">Onboarding</Link>
-            </div>
-          </div>
-        </div>
-      </main>
+      <main className=""></main>
     </HeroUIProvider>
   );
 }
