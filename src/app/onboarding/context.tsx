@@ -5,6 +5,7 @@ import {
   ServerTemplate,
   ServerTemplateCategory,
 } from "@/services/entity/entity";
+import { CreatePersistentNodeRequest } from "@/services/model/request";
 import { createContext, useContext, useState, ReactNode, useMemo } from "react";
 
 // Define the shared state type
@@ -13,6 +14,8 @@ interface OnboardingState {
   selectedCategory?: ServerTemplateCategory;
   title: string; // Add title field to shared state
   step: number;
+
+  request: Partial<CreatePersistentNodeRequest>;
 }
 
 // Initialize the context with default values
@@ -28,6 +31,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<OnboardingState>({
     title: "",
     step: 1,
+    request: {},
   });
 
   const value = useMemo(() => ({ state, setState }), [state]);
@@ -38,7 +42,6 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     </OnboardingContext.Provider>
   );
 }
-
 
 // Custom hook to use onboarding context
 export const useOnboarding = () => {

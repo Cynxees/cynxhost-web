@@ -1,5 +1,6 @@
 import { BaseResponse } from "@/services/model/response";
 import axios from "axios";
+import { camelCase, snakeCase } from "lodash";
 
 const api = axios.create({
   baseURL: "https://cynx.buzz/api/v1",
@@ -10,6 +11,18 @@ const api = axios.create({
 });
 
 export type ApiResponse<T> = T;
+
+const convertKeysToSnakeCase = (obj: any): any => {
+  if (Array.isArray(obj)) {
+    return obj.map((item) => convertKeysToSnakeCase(item));
+  } else if (obj !== null && obj.constructor === Object) {
+    return Object.keys(obj).reduce((acc, key) => {
+      acc[snakeCase(key)] = convertKeysToSnakeCase(obj[key]);
+      return acc;
+    }, {} as any);
+  }
+  return obj;
+};
 
 export const fetchData = async <T>(path: string): Promise<ApiResponse<T>> => {
   try {
@@ -26,7 +39,8 @@ export const postData = async <TRequest, TResponse = BaseResponse>(
   data?: TRequest
 ): Promise<ApiResponse<TResponse>> => {
   try {
-    const response = await api.post<TResponse>(path, data);
+    const snakeCaseData = data ? convertKeysToSnakeCase(data) : undefined;
+    const response = await api.post<TResponse>(path, snakeCaseData);
     return response.data;
   } catch (error) {
     console.debug(error);

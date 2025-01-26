@@ -1,5 +1,5 @@
 "use client";
-import { Button, HeroUIProvider } from "@heroui/react";
+import { HeroUIProvider } from "@heroui/react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -23,16 +23,7 @@ export default function HomePage() {
 
   return (
     <HeroUIProvider>
-      <main className="">
-        <div>
-          <div>
-            <div>
-              <Link href="/login">Sign In</Link>
-              <Link href="/onboarding/form/game">Onboarding</Link>
-            </div>
-          </div>
-        </div>
-      </main>
+      <main className=""></main>
     </HeroUIProvider>
   );
 }

@@ -1,16 +1,19 @@
 "use client";
 
 import { ServerTemplate } from "@/services/entity/entity";
-import { getServerTemplateById } from "@/services/serverTemplateService";
 import {
-  Divider,
-  Select,
-  SelectItem,
-  Slider
-} from "@heroui/react";
-import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+  getServerTemplateById,
+  validateServerTemplateVariables,
+} from "@/services/serverTemplateService";
+import { Button, Divider, Select, SelectItem, Slider } from "@heroui/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ChangeEvent, Suspense, useEffect, useState } from "react";
 import { useOnboarding } from "../../context";
+import {
+  CreatePersistentNodeRequest,
+  ServerTemplateScriptVariable,
+  ValidateServerTemplateVariablesRequest,
+} from "@/services/model/request";
 
 export default function OnboardingGameDetailPage() {
   return (
@@ -23,10 +26,14 @@ export default function OnboardingGameDetailPage() {
 function GameDetailContent() {
   const searchParams = useSearchParams();
   const parentId = parseInt(searchParams.get("id") || "0") || null;
+  const router = useRouter();
 
   const { state, setState } = useOnboarding();
   const [selectedGame, setSelectedGame] = useState<ServerTemplate | null>(null);
   const [selectedStorageSize, setSelectedStorageSize] = useState(8);
+  const [selectedVariables, setSelectedVariables] = useState<
+    ServerTemplateScriptVariable[]
+  >([]);
 
   useEffect(() => {
     console.log("state:", state);
@@ -46,7 +53,60 @@ function GameDetailContent() {
       }
     });
   }, [parentId]);
-  
+
+  const handleVariableChange = (
+    variableName: string,
+    e: ChangeEvent<HTMLSelectElement>
+  ) => {
+    const variable = selectedVariables.find(
+      (variable) => variable.name === variableName
+    );
+
+    if (variable) {
+      variable.value = e.target.value;
+      return;
+    }
+
+    setSelectedVariables((prev) => [
+      ...prev,
+      { name: variableName, value: e.target.value },
+    ]);
+  };
+
+  const onClickSubmit = async () => {
+    // Validate server template variables
+    const request: Partial<CreatePersistentNodeRequest> = {
+      ...state.request,
+      serverTemplateId: state.selectedGame?.Id,
+      variables: selectedVariables,
+      storageSizeMb: selectedStorageSize,
+    };
+
+    if (
+      request.serverTemplateId === undefined ||
+      request.variables === undefined
+    ) {
+      return;
+    }
+
+    const result = await validateServerTemplateVariables({
+      serverTemplateId: request.serverTemplateId,
+      variables: request.variables,
+    });
+
+    if (result.code !== "SU") {
+      console.error("Error validating server template variables");
+      return;
+    }
+
+    setState({
+      ...state,
+      step: 3,
+      request: request,
+    });
+
+    router.push(`/onboarding/form/tier`);
+  };
 
   if (selectedGame == null) {
     return <div>Loading...</div>;
@@ -62,17 +122,24 @@ function GameDetailContent() {
       <div>
         {selectedGame?.Variables?.map((variable) => (
           <Select
+            isRequired
             key={variable.Name}
             className="w-72"
             label={variable.Name}
             placeholder={"Select " + variable.Name}
             aria-label={`Select ${variable.Name}`}
+            items={variable.Content}
+            onChange={(value) => handleVariableChange(variable.Name, value)}
           >
-            {variable.Content.map((content) => (
-              <SelectItem key={content.Name} className="bg-foreground">
+            {(content) => (
+              <SelectItem
+                key={content.Name}
+                className="bg-foreground"
+                value={content.Name}
+              >
                 {content.Name}
               </SelectItem>
-            ))}
+            )}
           </Select>
         ))}
       </div>
@@ -100,6 +167,10 @@ function GameDetailContent() {
           }}
         ></Slider>
       </div>
+
+      <Button color="primary" onPress={onClickSubmit}>
+        Continue
+      </Button>
     </div>
   );
 }
