@@ -10,7 +10,7 @@ export const pageMetadata = {
 
 export default function OnboardingGameDetailPage() {
   const searchParams = useSearchParams();
-  const name = searchParams.get("id");
+  const parentId = searchParams.get("id");
 
   const { state, setState } = useOnboarding();
 
@@ -25,7 +25,7 @@ export default function OnboardingGameDetailPage() {
   return (
     <div>
       <h1>Step 2</h1>
-      <p>Name: {name}</p>
+      <p>Name: {parentId}</p>
     </div>
   );
 }

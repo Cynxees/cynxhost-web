@@ -32,7 +32,7 @@ const GameCard: React.FC<GameCardProps> = ({ game, onClick }) => {
     >
       <Image src={game.ImageUrl} alt={game.Name} className="w-full h-full object-cover object-center" />
 
-      <div className="absolute bottom-0 left-0 w-full h-[90%] bg-gradient-to-t from-black to-transparent z-10"></div>
+      <div className="absolute bottom-0 left-0 w-full h-[90%] bg-gradient-to-t from-black/90 to-transparent z-10"></div>
 
       <CardFooter className="absolute bottom-2 font-extrabold text-5xl left-2 z-20 text-white">
       {game.Name}

@@ -1,12 +1,16 @@
 // context/OnboardingContext.tsx
 "use client";
 
+import {
+  ServerTemplate,
+  ServerTemplateCategory,
+} from "@/services/entity/entity";
 import { createContext, useContext, useState, ReactNode } from "react";
 
 // Define the shared state type
 interface OnboardingState {
-  selectedGame: string | null;
-  selectedCategory: string | null;
+  selectedGame?: ServerTemplate;
+  selectedCategory?: ServerTemplateCategory;
   title: string; // Add title field to shared state
   step: number;
 }
@@ -20,8 +24,6 @@ const OnboardingContext = createContext<{
 // Context Provider component
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<OnboardingState>({
-    selectedGame: null,
-    selectedCategory: null,
     title: "",
     step: 1,
   });

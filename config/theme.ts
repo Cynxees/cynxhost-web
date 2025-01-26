@@ -4,7 +4,7 @@ import { LayoutTheme, ThemeColors } from "@heroui/react";
 
 export const DarkColorTheme: Partial<ThemeColors> = {
   primary: "#FFFFFF",
-  secondary: "#4B5563",
+  secondary: "#caf0f8",
 
   content1: "#FFFFFF",
 

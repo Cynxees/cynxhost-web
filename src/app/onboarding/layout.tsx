@@ -52,7 +52,7 @@ function OnboardingLayoutContent({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-col gap-6 pt-6">
       <Progress
-        className="bg-secondary"
+        className="bg-foreground"
         color="primary"
         value={(state.step / totalSteps) * 100}
       />
