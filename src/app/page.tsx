@@ -28,7 +28,7 @@ export default function HomePage() {
           <div>
             <div>
               <Link href="/login">Sign In</Link>
-              <Link href="/onboarding/game">Onboarding</Link>
+              <Link href="/onboarding/form/game">Onboarding</Link>
             </div>
           </div>
         </div>
