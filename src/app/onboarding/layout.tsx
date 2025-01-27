@@ -1,9 +1,6 @@
-// app/onboarding/layout.tsx
-"use client";
-
 import Image from "next/image";
 import { ReactNode } from "react";
-import { OnboardingProvider } from "./context";
+import OnboardingProviders from "./provider";
 
 export default function RootOnboardingLayout({
   children,
@@ -11,7 +8,7 @@ export default function RootOnboardingLayout({
   children: ReactNode;
 }) {
   return (
-    <OnboardingProvider>
+    <OnboardingProviders>
       <Image
         width={100}
         height={100}
@@ -20,9 +17,7 @@ export default function RootOnboardingLayout({
         alt=""
       />
 
-      <div className="relative z-10">
-        {children}
-      </div>
-    </OnboardingProvider>
+      <div className="relative z-10">{children}</div>
+    </OnboardingProviders>
   );
 }

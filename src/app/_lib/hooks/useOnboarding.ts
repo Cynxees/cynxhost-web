@@ -1,44 +1,21 @@
-// context/OnboardingContext.tsx
-"use client";
-
 import { ServerTemplate, ServerTemplateCategory } from "@/types/entity/entity";
 import { CreatePersistentNodeRequest } from "@/types/model/request";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
 // Define the shared state type
-interface OnboardingState {
+export interface OnboardingState {
+  parentHistory: ServerTemplateCategory[];
   selectedGame?: ServerTemplate;
   selectedCategory?: ServerTemplateCategory;
-  title: string; // Add title field to shared state
-  step: number;
 
   request: Partial<CreatePersistentNodeRequest>;
 }
 
 // Initialize the context with default values
-const OnboardingContext = createContext<{
+export const OnboardingContext = createContext<{
   state: OnboardingState;
   setState: (newState: OnboardingState) => void;
 } | null>(null);
-
-// Context Provider component
-export function OnboardingProvider({ children }: { children: ReactNode }) {
-  console.log("OnboardingProvider");
-
-  const [state, setState] = useState<OnboardingState>({
-    title: "",
-    step: 1,
-    request: {},
-  });
-
-  const value = useMemo(() => ({ state, setState }), [state]);
-
-  return (
-    <OnboardingContext.Provider value={value}>
-      {children}
-    </OnboardingContext.Provider>
-  );
-}
 
 // Custom hook to use onboarding context
 export const useOnboarding = () => {

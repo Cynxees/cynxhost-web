@@ -3,12 +3,21 @@
 import { CreatePersistentNode } from "@/app/_lib/services/persistentNodeService";
 import { Button, Input } from "@heroui/react";
 import { useRouter } from "next/navigation";
-import { useOnboarding } from "../../context";
+import { useOnboarding } from "../../../_lib/hooks/useOnboarding";
 
 export default function OnboardingConfirmPage() {
   const { state, setState } = useOnboarding();
 
   const router = useRouter();
+
+  if (
+    state.request.instanceTypeId == undefined ||
+    state.request.storageSizeMb == undefined ||
+    state.request.serverTemplateId === undefined
+  ) {
+    router.push("/onboarding/form/game");
+    return;
+  }
 
   const onClickConfirm = async () => {
     const req = state.request;

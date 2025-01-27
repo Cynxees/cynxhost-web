@@ -6,7 +6,5 @@ interface SearchParams {
 }
 
 export default async function DashboardNodeWrapper() {
-  const nodeData = await GetPersistentNode({ Id: 70 });
-
-  return <DashboardNodeContent nodeData={nodeData?.data} />;
+  return <DashboardNodeContent />;
 }
