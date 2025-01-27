@@ -5,18 +5,18 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { getProfile } from "../_lib/services/userService";
+import { useAuth } from "../_lib/hooks/useAuth";
 
 const Navbar: React.FC = ({}) => {
+  const { profileData, isLoading } = useAuth();
   const [profile, setProfile] = useState<GetProfileResponse["data"] | null>(
     null
   );
 
   useEffect(() => {
     // Fetch profile
-    getProfile().then((response) => {
-      setProfile(response.data);
-    });
-  }, []);
+    setProfile(profileData?.data);
+  }, [profileData]);
 
   const pathname = usePathname();
   const router = useRouter();

@@ -17,7 +17,7 @@ export default function LoginContent() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    loginUser({ username, password });
+    login({ username, password });
 
     router.push("/");
   };
