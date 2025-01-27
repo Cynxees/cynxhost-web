@@ -1,19 +1,18 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-import { checkUsername, registerUser } from "@/services/userService";
+import { checkUsername, registerUser } from "@/app/_lib/services/userService";
 import {
   Alert,
   Button,
   Card,
-  Code,
   Divider,
   Form,
   Input,
   Link,
   Spinner,
 } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");

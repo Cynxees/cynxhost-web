@@ -1,45 +1,55 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { getProfile, GetProfileResponse } from "@/services/userService";
-import { PersistentNode } from "@/services/entity/entity";
-import { GetPersistentNodes } from "@/services/persistentNodeService";
+import { GetPersistentNodes } from "@/app/_lib/services/persistentNodeService";
+import { PersistentNode } from "@/types/entity/entity";
+import { Button } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useAuth } from "../_lib/hooks/useAuth";
 
 const Dashboard = () => {
-  const [profile, setProfile] = useState<GetProfileResponse["data"]>();
+  const router = useRouter();
   const [loading, isLoading] = useState(true);
 
   const [nodes, setNodes] = useState<PersistentNode[]>();
-
-  useEffect(() => {
-    getProfile().then((profile) => {
-      setProfile(profile.data);
-      isLoading(false);
-    });
-  }, []);
+  const { profileData } = useAuth();
 
   useEffect(() => {
     // Fetch nodes
     GetPersistentNodes().then((response) => {
       setNodes(response.data?.PersistentNodes);
     });
+    isLoading(false);
   }, []);
 
-  if (loading || !profile) {
+  if (loading) {
     return <div className="text-xl">Loading...</div>;
   }
 
   return (
     <div>
-      <h1>Welcome to your Dashboard, {profile.Username}!</h1>
-      <h2>Coin: {profile.Coin}</h2>
+      <h1>Dashboard</h1>
+      <h2>Profile</h2>
+      <div>
+        {profileData?.data?.Username} : {profileData?.data?.Coin}
+      </div>
 
       <h2>Your Nodes</h2>
-      <ul>
+      <div>
         {nodes?.map((node) => (
-          <li key={node.Id}>{node.Name} : {node.Status}</li>
+          <div key={node.Id} className="flex flex-row">
+            <li>
+              {node.Name} : {node.Status}
+            </li>
+            <Button
+              onPress={() => {
+                console.log("Node ID: ", node.Id);
+                router.push(`/dashboard/node?id=${node.Id}`);
+              }}
+            ></Button>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

@@ -1,7 +1,10 @@
-import { postData } from "@/lib/fetcher";
-import { CreatePersistentNodeRequest, IdRequest } from "./model/request";
-import { BaseResponse } from "./model/response";
-import { PersistentNode } from "./entity/entity";
+import { postData } from "@/app/_lib/fetcher";
+import { PersistentNode } from "../../../types/entity/entity";
+import {
+  CreatePersistentNodeRequest,
+  IdRequest,
+} from "../../../types/model/request";
+import { BaseResponse } from "../../../types/model/response";
 
 type PaginatePersistentNodeResponse = BaseResponse<{
   PersistentNodes: PersistentNode[];

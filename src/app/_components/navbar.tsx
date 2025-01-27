@@ -1,62 +1,31 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { GetProfileResponse } from "@/types/model/response";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  getProfile,
-  GetProfileResponse,
-  logoutUser,
-} from "@/services/userService";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { getProfile } from "../_lib/services/userService";
+import { useAuth } from "../_lib/hooks/useAuth";
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC = ({}) => {
+  const { profileData, isLoading } = useAuth();
   const [profile, setProfile] = useState<GetProfileResponse["data"] | null>(
     null
   );
-  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch profile
+    setProfile(profileData?.data);
+  }, [profileData]);
+
   const pathname = usePathname();
   const router = useRouter();
 
   const hideNavbarRoutes = ["/login", "/register"];
 
-  useEffect(() => {
-    getProfile()
-      .then((response) => {
-        setProfile(response.data);
-      })
-      .catch(() => {
-        setProfile(null);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
   if (hideNavbarRoutes.includes(pathname)) {
     return null;
   }
-
-  const handleLogout = async () => {
-    try {
-      // Hit the logout endpoint
-      logoutUser();
-
-      setProfile(null);
-      router.push("/");
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        // Axios-specific error handling
-        console.error("Logout failed:", error.response?.data || error.message);
-      } else if (error instanceof Error) {
-        // Generic error handling
-        console.error("Logout failed:", error.message);
-      } else {
-        // Unknown error type
-        console.error("An unknown error occurred during logout.");
-      }
-    }
-  };
 
   return (
     <nav className="bg-transparent top-0 left-0 w-full shadow-lg relative z-50">
@@ -77,9 +46,7 @@ const Navbar: React.FC = () => {
               Dashboard
             </Link>
 
-            {loading ? (
-              "loading"
-            ) : profile ? (
+            {profile ? (
               <>
                 <Link href="/login" className="">
                   {profile?.Username}

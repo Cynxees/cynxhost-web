@@ -1,6 +1,6 @@
-import { BaseResponse } from "@/services/model/response";
+import { BaseResponse } from "@/types/model/response";
 import axios from "axios";
-import { camelCase, snakeCase } from "lodash";
+import { snakeCase } from "lodash";
 
 const api = axios.create({
   baseURL: "https://cynx.buzz/api/v1",
@@ -38,12 +38,7 @@ export const postData = async <TRequest, TResponse = BaseResponse>(
   path: string,
   data?: TRequest
 ): Promise<ApiResponse<TResponse>> => {
-  try {
-    const snakeCaseData = data ? convertKeysToSnakeCase(data) : undefined;
-    const response = await api.post<TResponse>(path, snakeCaseData);
-    return response.data;
-  } catch (error) {
-    console.debug(error);
-    throw error;
-  }
+  const snakeCaseData = data ? convertKeysToSnakeCase(data) : undefined;
+  const response = await api.post<TResponse>(path, snakeCaseData);
+  return response.data;
 };
