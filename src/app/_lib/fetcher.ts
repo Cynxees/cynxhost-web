@@ -1,6 +1,7 @@
-import { BaseResponse } from "@/services/model/response";
+import { BaseResponse } from "@/app/_lib/services/model/response";
 import axios from "axios";
-import { camelCase, snakeCase } from "lodash";
+import { snakeCase } from "lodash";
+import { cookies } from "next/headers";
 
 const api = axios.create({
   baseURL: "https://cynx.buzz/api/v1",
@@ -39,8 +40,15 @@ export const postData = async <TRequest, TResponse = BaseResponse>(
   data?: TRequest
 ): Promise<ApiResponse<TResponse>> => {
   try {
+    const cookieStore = await cookies();
+    const authCookie = cookieStore.get("AuthToken");
+
     const snakeCaseData = data ? convertKeysToSnakeCase(data) : undefined;
-    const response = await api.post<TResponse>(path, snakeCaseData);
+    const response = await api.post<TResponse>(path, snakeCaseData, {
+      headers: {
+        Cookie: `AuthToken=${authCookie?.value}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.debug(error);

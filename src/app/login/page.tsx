@@ -1,19 +1,9 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { loginUser } from "@/app/_lib/services/userService";
+import { Alert, Button, Card, Divider, Form, Input, Link } from "@heroui/react";
 import { useRouter } from "next/navigation";
-import { loginUser } from "@/services/userService";
-import {
-  Alert,
-  Button,
-  Card,
-  Code,
-  Divider,
-  Form,
-  Input,
-  Link,
-} from "@heroui/react";
-import { div } from "framer-motion/client";
+import { FormEvent, useState } from "react";
 
 export default function SignInPage() {
   const [username, setUsername] = useState("");

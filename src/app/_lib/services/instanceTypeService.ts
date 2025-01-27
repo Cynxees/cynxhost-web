@@ -1,4 +1,4 @@
-import { postData } from "@/lib/fetcher";
+import { postData } from "@/app/_lib/fetcher";
 import { InstanceType } from "./entity/entity";
 import { BasePaginateRequest } from "./model/request";
 import { BaseResponse } from "./model/response";

@@ -4,9 +4,9 @@
 import {
   ServerTemplate,
   ServerTemplateCategory,
-} from "@/services/entity/entity";
-import { CreatePersistentNodeRequest } from "@/services/model/request";
-import { createContext, useContext, useState, ReactNode, useMemo } from "react";
+} from "@/app/_lib/services/entity/entity";
+import { CreatePersistentNodeRequest } from "@/app/_lib/services/model/request";
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
 // Define the shared state type
 interface OnboardingState {

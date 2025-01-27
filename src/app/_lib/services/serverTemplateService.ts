@@ -1,4 +1,4 @@
-import { postData } from "@/lib/fetcher";
+import { postData } from "@/app/_lib/fetcher";
 import { ServerTemplate, ServerTemplateCategory } from "./entity/entity";
 import {
   BasePaginateRequest,

@@ -1,9 +1,9 @@
 "use client";
 
+import { CreatePersistentNode } from "@/app/_lib/services/persistentNodeService";
 import { Button, Input } from "@heroui/react";
-import { useOnboarding } from "../../context";
-import { CreatePersistentNode } from "@/services/persistentNodeService";
 import { useRouter } from "next/navigation";
+import { useOnboarding } from "../../context";
 
 export default function OnboardingConfirmPage() {
   const { state, setState } = useOnboarding();

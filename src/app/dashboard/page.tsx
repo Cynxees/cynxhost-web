@@ -1,11 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { getProfile, GetProfileResponse } from "@/services/userService";
-import { PersistentNode } from "@/services/entity/entity";
-import { GetPersistentNodes } from "@/services/persistentNodeService";
+import { PersistentNode } from "@/app/_lib/services/entity/entity";
+import { GetPersistentNodes } from "@/app/_lib/services/persistentNodeService";
+import {
+  getProfile,
+  GetProfileResponse,
+} from "@/app/_lib/services/userService";
+import { Button } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+  const router = useRouter();
+
   const [profile, setProfile] = useState<GetProfileResponse["data"]>();
   const [loading, isLoading] = useState(true);
 
@@ -35,11 +42,21 @@ const Dashboard = () => {
       <h2>Coin: {profile.Coin}</h2>
 
       <h2>Your Nodes</h2>
-      <ul>
+      <div>
         {nodes?.map((node) => (
-          <li key={node.Id}>{node.Name} : {node.Status}</li>
+          <div key={node.Id} className="flex flex-row">
+            <li>
+              {node.Name} : {node.Status}
+            </li>
+            <Button
+              onPress={() => {
+                console.log("Node ID: ", node.Id);
+                router.push(`/dashboard/node?id=${node.Id}`);
+              }}
+            ></Button>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

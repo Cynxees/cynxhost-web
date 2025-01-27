@@ -1,19 +1,18 @@
 "use client";
 
-import { ServerTemplate } from "@/services/entity/entity";
+import { ServerTemplate } from "@/app/_lib/services/entity/entity";
+import {
+  CreatePersistentNodeRequest,
+  ServerTemplateScriptVariable,
+} from "@/app/_lib/services/model/request";
 import {
   getServerTemplateById,
   validateServerTemplateVariables,
-} from "@/services/serverTemplateService";
+} from "@/app/_lib/services/serverTemplateService";
 import { Button, Divider, Select, SelectItem, Slider } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, Suspense, useEffect, useState } from "react";
 import { useOnboarding } from "../../context";
-import {
-  CreatePersistentNodeRequest,
-  ServerTemplateScriptVariable,
-  ValidateServerTemplateVariablesRequest,
-} from "@/services/model/request";
 
 export default function OnboardingGameDetailPage() {
   return (

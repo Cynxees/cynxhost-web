@@ -1,12 +1,10 @@
 "use client";
 
-import GameCard from "@/app/_components/onboarding/gameCard";
-import { InstanceType } from "@/services/entity/entity";
-import { paginateInstanceTypes } from "@/services/instanceTypeService";
-import { BreadcrumbItem, Breadcrumbs, Divider, Spinner } from "@heroui/react";
+import { InstanceType } from "@/app/_lib/services/entity/entity";
+import { paginateInstanceTypes } from "@/app/_lib/services/instanceTypeService";
+import { Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowLeft } from "solar-icon-set";
 import { useOnboarding } from "../../context";
 
 export default function OnboardingTierPage() {

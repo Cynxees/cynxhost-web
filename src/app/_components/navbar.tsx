@@ -1,37 +1,28 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import {
   getProfile,
   GetProfileResponse,
   logoutUser,
-} from "@/services/userService";
+} from "@/app/_lib/services/userService";
 import axios from "axios";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  profile: GetProfileResponse["data"];
+}
+
+const Navbar: React.FC<NavbarProps> = ({ profile: user }) => {
   const [profile, setProfile] = useState<GetProfileResponse["data"] | null>(
-    null
+    user
   );
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
 
   const hideNavbarRoutes = ["/login", "/register"];
-
-  useEffect(() => {
-    getProfile()
-      .then((response) => {
-        setProfile(response.data);
-      })
-      .catch(() => {
-        setProfile(null);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
 
   if (hideNavbarRoutes.includes(pathname)) {
     return null;

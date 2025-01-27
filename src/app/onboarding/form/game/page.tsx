@@ -1,8 +1,8 @@
 "use client";
 
 import GameCard from "@/app/_components/onboarding/gameCard";
-import { ServerTemplateCategory } from "@/services/entity/entity";
-import { paginateServerCategory } from "@/services/serverTemplateService";
+import { ServerTemplateCategory } from "@/app/_lib/services/entity/entity";
+import { paginateServerCategory } from "@/app/_lib/services/serverTemplateService";
 import { BreadcrumbItem, Breadcrumbs, Divider, Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

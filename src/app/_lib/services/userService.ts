@@ -1,4 +1,4 @@
-import { postData } from "@/lib/fetcher";
+import { postData } from "@/app/_lib/fetcher";
 import { BaseResponse } from "./model/response";
 
 type RegisterUserRequest = {
