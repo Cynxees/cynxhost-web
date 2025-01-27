@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Navbar from "./_components/navbar";
 import "./globals.css";
-import { getProfile } from "./_lib/services/userService";
+import { Providers } from "./providers";
 
 const geistSans = localFont({
   src: "./_assets/fonts/GeistVF.woff",
@@ -25,10 +25,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const profile = await getProfile();
-
   return (
     <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased dark bg-background text-content2 pt-24 px-32`}
+      >
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
+      </body>
     </html>
   );
 }

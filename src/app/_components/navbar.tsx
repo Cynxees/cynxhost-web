@@ -1,24 +1,23 @@
 "use client";
 
-import {
-  getProfile,
-  GetProfileResponse,
-  logoutUser,
-} from "@/app/_lib/services/userService";
-import axios from "axios";
+import { GetProfileResponse } from "@/types/model/response";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { getProfile } from "../_lib/services/userService";
 
-interface NavbarProps {
-  profile: GetProfileResponse["data"];
-}
-
-const Navbar: React.FC<NavbarProps> = ({ profile: user }) => {
+const Navbar: React.FC = ({}) => {
   const [profile, setProfile] = useState<GetProfileResponse["data"] | null>(
-    user
+    null
   );
-  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch profile
+    getProfile().then((response) => {
+      setProfile(response.data);
+    });
+  }, []);
+
   const pathname = usePathname();
   const router = useRouter();
 
@@ -27,27 +26,6 @@ const Navbar: React.FC<NavbarProps> = ({ profile: user }) => {
   if (hideNavbarRoutes.includes(pathname)) {
     return null;
   }
-
-  const handleLogout = async () => {
-    try {
-      // Hit the logout endpoint
-      logoutUser();
-
-      setProfile(null);
-      router.push("/");
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        // Axios-specific error handling
-        console.error("Logout failed:", error.response?.data || error.message);
-      } else if (error instanceof Error) {
-        // Generic error handling
-        console.error("Logout failed:", error.message);
-      } else {
-        // Unknown error type
-        console.error("An unknown error occurred during logout.");
-      }
-    }
-  };
 
   return (
     <nav className="bg-transparent top-0 left-0 w-full shadow-lg relative z-50">
@@ -68,9 +46,7 @@ const Navbar: React.FC<NavbarProps> = ({ profile: user }) => {
               Dashboard
             </Link>
 
-            {loading ? (
-              "loading"
-            ) : profile ? (
+            {profile ? (
               <>
                 <Link href="/login" className="">
                   {profile?.Username}

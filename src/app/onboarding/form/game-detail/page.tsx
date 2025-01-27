@@ -1,14 +1,14 @@
 "use client";
 
-import { ServerTemplate } from "@/app/_lib/services/entity/entity";
-import {
-  CreatePersistentNodeRequest,
-  ServerTemplateScriptVariable,
-} from "@/app/_lib/services/model/request";
 import {
   getServerTemplateById,
   validateServerTemplateVariables,
 } from "@/app/_lib/services/serverTemplateService";
+import { ServerTemplate } from "@/types/entity/entity";
+import {
+  CreatePersistentNodeRequest,
+  ServerTemplateScriptVariable,
+} from "@/types/model/request";
 import { Button, Divider, Select, SelectItem, Slider } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, Suspense, useEffect, useState } from "react";

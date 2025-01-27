@@ -1,11 +1,8 @@
 // context/OnboardingContext.tsx
 "use client";
 
-import {
-  ServerTemplate,
-  ServerTemplateCategory,
-} from "@/app/_lib/services/entity/entity";
-import { CreatePersistentNodeRequest } from "@/app/_lib/services/model/request";
+import { ServerTemplate, ServerTemplateCategory } from "@/types/entity/entity";
+import { CreatePersistentNodeRequest } from "@/types/model/request";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
 // Define the shared state type

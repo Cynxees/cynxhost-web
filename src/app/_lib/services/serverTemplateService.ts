@@ -1,11 +1,14 @@
 import { postData } from "@/app/_lib/fetcher";
-import { ServerTemplate, ServerTemplateCategory } from "./entity/entity";
+import {
+  ServerTemplate,
+  ServerTemplateCategory,
+} from "../../../types/entity/entity";
 import {
   BasePaginateRequest,
   IdRequest,
   ValidateServerTemplateVariablesRequest,
-} from "./model/request";
-import { BaseResponse } from "./model/response";
+} from "../../../types/model/request";
+import { BaseResponse } from "../../../types/model/response";
 
 type PaginateServerTemplateCategoryRequest = BasePaginateRequest & {
   Id?: number; // ServerTemplateCategoryId

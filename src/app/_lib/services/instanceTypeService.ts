@@ -1,7 +1,7 @@
 import { postData } from "@/app/_lib/fetcher";
-import { InstanceType } from "./entity/entity";
-import { BasePaginateRequest } from "./model/request";
-import { BaseResponse } from "./model/response";
+import { InstanceType } from "../../../types/entity/entity";
+import { BasePaginateRequest } from "../../../types/model/request";
+import { BaseResponse } from "../../../types/model/response";
 
 type PaginateInstanceTypeResponse = BaseResponse<{
   InstanceTypes: InstanceType[];

@@ -1,26 +1,12 @@
 import { postData } from "@/app/_lib/fetcher";
-import { BaseResponse } from "./model/response";
-
-type RegisterUserRequest = {
-  username: string;
-  password: string;
-};
-
-type LoginUserRequest = {
-  username: string;
-  password: string;
-};
-
-type LoginUserResponse = BaseResponse;
-
-export type GetProfileResponse = BaseResponse<{
-  Username: string;
-  Coin: number;
-}>;
-
-type CheckUsernameRequest = {
-  username: string;
-};
+import {
+  BaseResponse,
+  CheckUsernameRequest,
+  GetProfileResponse,
+  LoginUserRequest,
+  LoginUserResponse,
+  RegisterUserRequest,
+} from "@/types/model/response";
 
 export async function registerUser(
   request: RegisterUserRequest

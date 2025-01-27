@@ -1,7 +1,7 @@
 "use client";
 
-import { InstanceType } from "@/app/_lib/services/entity/entity";
 import { paginateInstanceTypes } from "@/app/_lib/services/instanceTypeService";
+import { InstanceType } from "@/types/entity/entity";
 import { Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

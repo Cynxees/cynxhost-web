@@ -1,5 +1,5 @@
-import { PersistentNode } from "@/app/_lib/services/entity/entity";
-import { BaseResponse } from "@/app/_lib/services/model/response";
+import { PersistentNode } from "@/types/entity/entity";
+import { BaseResponse } from "@/types/model/response";
 
 const DashboardNodeContent = ({
   nodeData,

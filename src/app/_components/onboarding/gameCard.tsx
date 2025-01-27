@@ -1,6 +1,6 @@
 "use client";
 
-import { ServerTemplateCategory } from "@/app/_lib/services/entity/entity";
+import { ServerTemplateCategory } from "@/types/entity/entity";
 import { Card, CardFooter, Image } from "@heroui/react";
 import React from "react";
 

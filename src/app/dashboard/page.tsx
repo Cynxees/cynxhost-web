@@ -1,46 +1,31 @@
 "use client";
 
-import { PersistentNode } from "@/app/_lib/services/entity/entity";
 import { GetPersistentNodes } from "@/app/_lib/services/persistentNodeService";
-import {
-  getProfile,
-  GetProfileResponse,
-} from "@/app/_lib/services/userService";
+import { PersistentNode } from "@/types/entity/entity";
 import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
   const router = useRouter();
-
-  const [profile, setProfile] = useState<GetProfileResponse["data"]>();
   const [loading, isLoading] = useState(true);
 
   const [nodes, setNodes] = useState<PersistentNode[]>();
-
-  useEffect(() => {
-    getProfile().then((profile) => {
-      setProfile(profile.data);
-      isLoading(false);
-    });
-  }, []);
 
   useEffect(() => {
     // Fetch nodes
     GetPersistentNodes().then((response) => {
       setNodes(response.data?.PersistentNodes);
     });
+    isLoading(false);
   }, []);
 
-  if (loading || !profile) {
+  if (loading) {
     return <div className="text-xl">Loading...</div>;
   }
 
   return (
     <div>
-      <h1>Welcome to your Dashboard, {profile.Username}!</h1>
-      <h2>Coin: {profile.Coin}</h2>
-
       <h2>Your Nodes</h2>
       <div>
         {nodes?.map((node) => (

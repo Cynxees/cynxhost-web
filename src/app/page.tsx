@@ -1,9 +1,5 @@
-import { HeroUIProvider } from "@heroui/react";
+import HomePageContent from "./content";
 
 export default function HomePage() {
-  return (
-    <HeroUIProvider>
-      <main className="">dashboard</main>
-    </HeroUIProvider>
-  );
+  return <HomePageContent />;
 }
