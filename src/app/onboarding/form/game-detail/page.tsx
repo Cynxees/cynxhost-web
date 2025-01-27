@@ -1,22 +1,35 @@
 import { Suspense } from "react";
 import GameDetailContent from "./content";
 import { getServerTemplateById } from "@/app/_lib/services/serverTemplateService";
-
+interface PageProps {
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 export default async function OnboardingGameDetailPage({
   searchParams,
-}: {
-  searchParams?: { [key: string]: string | string[] | undefined };
-}) {
-  // Await the searchParams to resolve before using them
-  const id = searchParams?.id;
-  const parsedId = Array.isArray(id) ? id[0] : id; // In case the id is an array
-  const serverTemplateResponse = parsedId
-    ? await getServerTemplateById({ Id: parseInt(parsedId) })
-    : null;
+}: PageProps) {
+  if (!searchParams) {
+    return <div>No search parameters provided</div>;
+  }
 
+  // Await the searchParams resolution if needed
+  const params = await searchParams;
+
+  // Get the ID from the search params
+  const id = params?.id;
+  const parsedId = Array.isArray(id) ? id[0] : id; // In case the id is an array
+
+  if (!parsedId) {
+    return <div>Invalid or missing ID</div>;
+  }
+
+  // Await the API call to get server template
+  const serverTemplateResponse = await getServerTemplateById({
+    Id: parseInt(parsedId),
+  });
   const serverTemplate = serverTemplateResponse?.data?.ServerTemplate;
+
   if (!serverTemplate) {
-    return null;
+    return <div>Server template not found</div>;
   }
 
   return (
