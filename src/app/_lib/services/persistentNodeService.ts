@@ -34,8 +34,8 @@ export async function GetPersistentNodes(): Promise<PaginatePersistentNodeRespon
 }
 
 export async function GetPersistentNode(
-  options: ServiceOptions,
-  req: IdRequest
+  req: IdRequest,
+  options?: ServiceOptions
 ): Promise<BaseResponse<PersistentNode>> {
   const response = await postData<IdRequest, BaseResponse<PersistentNode>>(
     { path: "/persistent-node/detail", ...options },

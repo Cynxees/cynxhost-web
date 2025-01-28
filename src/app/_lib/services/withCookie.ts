@@ -2,7 +2,7 @@ import { ServiceOption } from "@/types/service/option";
 import { cookies } from "next/headers";
 
 export const withCookie = async <T>(
-  serviceFunction: (options: ServiceOption, req: any) => Promise<T>,
+  serviceFunction: (req: any, options?: ServiceOption) => Promise<T>,
   req: any
 ) => {
   try {
@@ -14,7 +14,7 @@ export const withCookie = async <T>(
       throw new Error("AuthToken cookie is missing");
     }
 
-    return serviceFunction({ authToken }, req);
+    return serviceFunction(req, { authToken });
   } catch (error) {
     console.error("Error in withCookie:", error);
     throw error;

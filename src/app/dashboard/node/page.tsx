@@ -1,10 +1,10 @@
-// page.tsx
 import { GetPersistentNode } from "@/app/_lib/services/persistentNodeService";
-import DashboardNodeContent from "./content";
-import { BaseResponse } from "@/types/model/response";
-import { PersistentNode } from "@/types/entity/entity";
-import { headers } from "next/headers";
 import { withCookie } from "@/app/_lib/services/withCookie";
+import { PersistentNode } from "@/types/entity/entity";
+import { BaseResponse } from "@/types/model/response";
+import { headers } from "next/headers";
+import { Client } from "ssh2";
+import DashboardNodeContent from "./content";
 
 interface SearchParams {
   id?: string;
