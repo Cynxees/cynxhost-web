@@ -2,6 +2,11 @@ import { BaseResponse } from "@/types/model/response";
 import { FetchOption } from "@/types/service/option";
 import axios from "axios";
 import { snakeCase } from "lodash";
+import https from "https";
+
+const agent = new https.Agent({
+  rejectUnauthorized: false, // Disables SSL verification
+});
 
 const api = axios.create({
   baseURL: "https://cynx.buzz/api/v1",
@@ -36,5 +41,29 @@ export const postData = async <TRequest, TResponse = BaseResponse>(
   }
 
   const response = await api.post<TResponse>(options.path, snakeCaseData);
+  return response.data;
+};
+
+export const postNodeData = async <TRequest, TResponse = BaseResponse>(
+  serverAlias: string,
+  options: FetchOption,
+  data?: TRequest
+): Promise<ApiResponse<TResponse>> => {
+  const snakeCaseData = data ? convertKeysToSnakeCase(data) : undefined;
+
+  if (options.authToken) {
+    api.defaults.headers.Cookie = `AuthToken=${options.authToken}`;
+  }
+
+  const baseURL = `https://${serverAlias}.cynx.buzz/api/v1`;
+
+  const response = await axios.post<TResponse>(
+    `${baseURL}${options.path}`,
+    snakeCaseData,
+    {
+      httpsAgent: agent,
+    }
+  );
+
   return response.data;
 };

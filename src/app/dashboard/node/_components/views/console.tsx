@@ -1,107 +1,112 @@
 "use client";
 
+import {
+  CreateSession,
+  SendCommand,
+} from "@/app/_lib/services/node/consoleService";
 import { PersistentNode } from "@/types/entity/entity";
-import { useState } from "react";
+import { Button, Divider, Input } from "@heroui/react";
+import { useEffect, useState } from "react";
 
 type Props = {
   node: PersistentNode;
 };
 
 export default function ConsoleView({ node }: Props) {
-  const [output, setOutput] = useState<string>("");
+  const [logs, setLogs] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [command, setCommand] = useState<string>("");
-  const [connected, setConnected] = useState<boolean>(false);
 
-  const connectToSSH = async () => {
-    try {
-      const response = await fetch(`/api/ssh/connect`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ nodeId: node.Id }),
-      });
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      console.log("Creating session for node", node.ServerAlias);
+      const sessionResponse = await CreateSession(node.ServerAlias);
 
-      if (response.ok) {
-        setConnected(true);
-        setOutput("Connected to SSH server.");
-      } else {
-        const data = await response.json();
-        setOutput(`Failed to connect: ${data.message}`);
+      if (!sessionResponse.data) {
+        console.error("Failed to create session");
+        return;
       }
-    } catch (error) {
-      setOutput(`Connection error: ${error}`);
-    }
+
+      setSessionId(sessionResponse.data?.SessionId);
+
+      const cleanup = connectToWebsocket(sessionResponse.data?.SessionId);
+
+      return () => {
+        cleanup();
+      };
+    };
+
+    fetchData();
+  }, []);
+
+  const connectToWebsocket = (sessionId: string) => {
+    const socket = new WebSocket(
+      `wss://${node.ServerAlias}.cynx.buzz/ws/api/v1/persistent-node/logs?id=${sessionId}`
+    );
+
+    socket.onopen = () => {
+      console.log("WebSocket connected");
+    };
+
+    socket.onmessage = (event) => {
+      console.log("Message from server:", event.data);
+      setLogs((prevLogs) => [...prevLogs, event.data]);
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket closed");
+    };
+
+    return () => {
+      socket.close();
+    };
   };
 
-  const disconnectSSH = async () => {
-    try {
-      const response = await fetch(`/api/ssh/disconnect`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ nodeId: node.Id }),
-      });
+  const onClickSendCommand = async () => {
+    console.log("Sending command", command);
 
-      if (response.ok) {
-        setConnected(false);
-        setOutput("Disconnected from SSH server.");
-      } else {
-        const data = await response.json();
-        setOutput(`Failed to disconnect: ${data.message}`);
-      }
-    } catch (error) {
-      setOutput(`Disconnection error: ${error}`);
+    setLogs((prevLogs) => [...prevLogs, `> ${command}`]); 
+
+    if (!sessionId) {
+      console.error("Session ID is not set");
+      return;
     }
-  };
 
-  const executeCommand = async () => {
-    try {
-      const response = await fetch(`/api/ssh/execute`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ nodeId: node.Id, command }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setOutput(data.output || "Command executed with no output.");
-      } else {
-        setOutput(`Command failed: ${data.message}`);
-      }
-    } catch (error) {
-      setOutput(`Execution error: ${error}`);
-    }
+    // Send command to server
+    const response = await SendCommand(node.ServerAlias, {
+      command: command,
+      sessionId: sessionId,
+      isBase64Encoded: false,
+    });
   };
 
   return (
     <div>
-      <h2>Console</h2>
-      {connected ? <p>Status: Connected</p> : <p>Status: Disconnected</p>}
-      <button onClick={connectToSSH} disabled={connected}>
-        Connect
-      </button>
-      <button onClick={disconnectSSH} disabled={!connected}>
-        Disconnect
-      </button>
-      <br />
-      <input
+      <p>Node ID: {node.Id}</p>
+      <p>Node Name: {node.Name}</p>
+
+      <h2>Logs</h2>
+      <div>
+        {logs.map((log, index) => (
+          <div key={index}>{log}</div>
+        ))}
+      </div>
+
+      <Divider></Divider>
+      <Input
         type="text"
         value={command}
         onChange={(e) => setCommand(e.target.value)}
-        placeholder="Enter command"
-        disabled={!connected}
+        onKeyPress={(e) => {
+          if (e.key === "Enter") {
+            onClickSendCommand();
+          }
+        }}
       />
-      <button onClick={executeCommand} disabled={!connected}>
-        Execute
-      </button>
-      <div>
-        <h3>Output:</h3>
-        <pre>{output}</pre>
-      </div>
+      <Button onPress={onClickSendCommand}>Send Command</Button>
     </div>
   );
 }
