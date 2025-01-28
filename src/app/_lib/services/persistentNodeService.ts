@@ -47,9 +47,9 @@ export async function GetPersistentNode(
 }
 
 export async function ForceShutdownPersistentNode(
-  id: string
+  id: number
 ): Promise<BaseResponse> {
-  const response = await postData<{ persistentNodeId: string }, BaseResponse>(
+  const response = await postData<{ persistentNodeId: number }, BaseResponse>(
     { path: "/persistent-node/force-shutdown" },
     { persistentNodeId: id }
   );
