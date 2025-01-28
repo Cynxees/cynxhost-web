@@ -1,4 +1,5 @@
 import { postData } from "@/app/_lib/fetcher";
+import { ServiceOption as ServiceOptions } from "@/types/service/option";
 import { PersistentNode } from "../../../types/entity/entity";
 import {
   CreatePersistentNodeRequest,
@@ -14,7 +15,7 @@ export async function CreatePersistentNode(
   request: CreatePersistentNodeRequest
 ): Promise<BaseResponse> {
   const response = await postData<CreatePersistentNodeRequest, BaseResponse>(
-    "/persistent-node/create",
+    { path: "/persistent-node/create" },
     request
   );
 
@@ -24,7 +25,7 @@ export async function CreatePersistentNode(
 
 export async function GetPersistentNodes(): Promise<PaginatePersistentNodeResponse> {
   const response = await postData<null, PaginatePersistentNodeResponse>(
-    "/persistent-node/show-owned",
+    { path: "/persistent-node/show-owned" },
     null
   );
 
@@ -33,10 +34,11 @@ export async function GetPersistentNodes(): Promise<PaginatePersistentNodeRespon
 }
 
 export async function GetPersistentNode(
+  options: ServiceOptions,
   req: IdRequest
 ): Promise<BaseResponse<PersistentNode>> {
   const response = await postData<IdRequest, BaseResponse<PersistentNode>>(
-    "/persistent-node/detail",
+    { path: "/persistent-node/detail", ...options },
     req
   );
 
@@ -48,7 +50,7 @@ export async function ForceShutdownPersistentNode(
   id: string
 ): Promise<BaseResponse> {
   const response = await postData<{ persistentNodeId: string }, BaseResponse>(
-    "/persistent-node/force-shutdown",
+    { path: "/persistent-node/force-shutdown" },
     { persistentNodeId: id }
   );
 

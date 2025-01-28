@@ -1,26 +1,31 @@
+// content.tsx
 "use client";
 
 import { GetPersistentNode } from "@/app/_lib/services/persistentNodeService";
 import { PersistentNode } from "@/types/entity/entity";
 import { BaseResponse } from "@/types/model/response";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
 
-type GetNodeQueryKey = {
+type DashboardNodeContentProps = {
   id: number;
+  nodeData: BaseResponse<PersistentNode> | null;
 };
 
-const DashboardNodeContent = () => {
-  const param = useSearchParams();
-  const id = parseInt(param.get("id") ?? "");
-
+const DashboardNodeContent = ({ id, nodeData }: DashboardNodeContentProps) => {
+  // Use React Query with initialData from server
   const { data, isLoading, error } = useQuery<BaseResponse<PersistentNode>>({
-    queryKey: ["node", { id: id }],
-    queryFn: ({ queryKey }) => {
-      const { id } = queryKey[1] as GetNodeQueryKey;
-      return GetPersistentNode({ Id: id });
-    },
+    queryKey: ["node", { id }],
+    queryFn: () => GetPersistentNode({}, { Id: id }),
+    initialData: nodeData ?? undefined,
+    enabled: !isNaN(id),
   });
+
+  // Use the latest data from query
+  const node = data?.data;
+
+  if (isNaN(id)) {
+    return <div>Invalid node ID</div>;
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -30,17 +35,14 @@ const DashboardNodeContent = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  // Check if data and nodeData are available
-  const nodeData = data?.data; // Assuming 'data' contains the 'data' property inside BaseResponse
-
-  if (!nodeData) {
+  if (!node) {
     return <div>Node not found</div>;
   }
 
   return (
     <div>
-      <p>{nodeData.Id}</p>
-      <h1>{nodeData.Name}</h1>
+      <p>{node.Id}</p>
+      <h1>{node.Name}</h1>
     </div>
   );
 };

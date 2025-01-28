@@ -1,4 +1,5 @@
 import { BaseResponse } from "@/types/model/response";
+import { FetchOption } from "@/types/service/option";
 import axios from "axios";
 import { snakeCase } from "lodash";
 
@@ -24,21 +25,16 @@ const convertKeysToSnakeCase = (obj: any): any => {
   return obj;
 };
 
-export const fetchData = async <T>(path: string): Promise<ApiResponse<T>> => {
-  try {
-    const response = await api.get(path);
-    return response.data;
-  } catch (error) {
-    console.debug(error);
-    throw error;
-  }
-};
-
 export const postData = async <TRequest, TResponse = BaseResponse>(
-  path: string,
+  options: FetchOption,
   data?: TRequest
 ): Promise<ApiResponse<TResponse>> => {
   const snakeCaseData = data ? convertKeysToSnakeCase(data) : undefined;
-  const response = await api.post<TResponse>(path, snakeCaseData);
+
+  if (options.authToken) {
+    api.defaults.headers.Cookie = `AuthToken=${options.authToken}`;
+  }
+
+  const response = await api.post<TResponse>(options.path, snakeCaseData);
   return response.data;
 };
