@@ -18,7 +18,6 @@ export async function registerUser(
     request
   );
 
-  console.log("User created:", response);
   return response;
 }
 
@@ -30,7 +29,6 @@ export async function loginUser(
     request
   );
 
-  console.log("Login response:", response);
   return response;
 }
 
@@ -39,7 +37,6 @@ export async function logoutUser(): Promise<BaseResponse> {
     path: "/user/logout",
   });
 
-  console.log("Logout response:", response);
   return response;
 }
 
@@ -51,7 +48,6 @@ export async function checkUsername(
     request
   );
 
-  console.log("Username checked:", response);
   return response;
 }
 
@@ -61,6 +57,5 @@ export async function getProfile(): Promise<GetProfileResponse> {
     null
   );
 
-  console.log("Profile:", response);
   return response;
 }

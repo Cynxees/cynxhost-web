@@ -1,112 +1,124 @@
-"use client";
-
+import { useEffect, useRef, useState } from "react";
+import { Terminal } from "@xterm/xterm";
+import { FitAddon } from "xterm-addon-fit";
+import "xterm/css/xterm.css"; // Add xterm CSS for styling
+import { Button } from "@heroui/react";
 import {
   CreateSession,
   SendCommand,
 } from "@/app/_lib/services/node/consoleService";
 import { PersistentNode } from "@/types/entity/entity";
-import { Button, Divider, Input } from "@heroui/react";
-import { useEffect, useState } from "react";
 
 type Props = {
   node: PersistentNode;
 };
 
 export default function ConsoleView({ node }: Props) {
-  const [logs, setLogs] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [command, setCommand] = useState<string>("");
 
+  const wsRef = useRef<WebSocket | null>(null);
+  const xtermRef = useRef<HTMLDivElement | null>(null);
+  const xterm = useRef<Terminal | null>(null);
+  const inputRef = useRef<string>("");
+
+  // Initialize the terminal
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      console.log("Creating session for node", node.ServerAlias);
-      const sessionResponse = await CreateSession(node.ServerAlias);
+    if (!xtermRef.current) return;
 
-      if (!sessionResponse.data) {
-        console.error("Failed to create session");
-        return;
-      }
+    xterm.current = new Terminal({
+      cursorBlink: true,
+      theme: {
+        background: "#000000",
+        foreground: "#ffffff",
+      },
+      convertEol: true,
+      allowTransparency: true,
+    });
 
-      setSessionId(sessionResponse.data?.SessionId);
+    const fitAddon = new FitAddon();
+    xterm.current.loadAddon(fitAddon);
+    xterm.current.open(xtermRef.current);
+    fitAddon.fit();
 
-      const cleanup = connectToWebsocket(sessionResponse.data?.SessionId);
+    // Handle user input
+    xterm.current.onData(async (data) => {
+      if (!sessionId) return;
 
-      return () => {
-        cleanup();
-      };
+      console.log("Sending command:", data);
+      await SendCommand(node.ServerAlias, {
+        command: data,
+        sessionId,
+        isBase64Encoded: true,
+      });
+
+    });
+
+    return () => {
+      xterm.current?.dispose();
     };
+  }, [sessionId]);
 
-    fetchData();
-  }, []);
+  // Function to initialize session
+  const initializeSession = async () => {
+    console.log("Creating session for node", node.ServerAlias);
+    const sessionResponse = await CreateSession(node.ServerAlias, {
+      shell: "bash",
+    });
 
+    if (!sessionResponse.data) {
+      console.error("Failed to create session");
+      return;
+    }
+
+    const newSessionId = sessionResponse.data.SessionId;
+    setSessionId(newSessionId);
+    connectToWebsocket(newSessionId);
+  };
+
+  // Connect to WebSocket
   const connectToWebsocket = (sessionId: string) => {
+    if (wsRef.current) {
+      wsRef.current.close();
+    }
+
     const socket = new WebSocket(
       `wss://${node.ServerAlias}.cynx.buzz/ws/api/v1/persistent-node/logs?id=${sessionId}`
     );
 
-    socket.onopen = () => {
-      console.log("WebSocket connected");
-    };
-
+    socket.onopen = () => console.log("WebSocket connected");
     socket.onmessage = (event) => {
-      console.log("Message from server:", event.data);
-      setLogs((prevLogs) => [...prevLogs, event.data]);
+      try {
+        const decodedData = atob(event.data); // Decode base64
+        xterm.current?.write(decodedData);
+      } catch (error) {
+        console.error("Failed to decode base64 data:", error);
+      }
     };
 
-    socket.onclose = () => {
-      console.log("WebSocket closed");
-    };
+    socket.onclose = () => console.log("WebSocket closed");
 
+    wsRef.current = socket;
+  };
+
+  // Cleanup WebSocket on unmount
+  useEffect(() => {
     return () => {
-      socket.close();
+      wsRef.current?.close();
     };
-  };
-
-  const onClickSendCommand = async () => {
-    console.log("Sending command", command);
-
-    setLogs((prevLogs) => [...prevLogs, `> ${command}`]); 
-
-    if (!sessionId) {
-      console.error("Session ID is not set");
-      return;
-    }
-
-    // Send command to server
-    const response = await SendCommand(node.ServerAlias, {
-      command: command,
-      sessionId: sessionId,
-      isBase64Encoded: false,
-    });
-  };
+  }, []);
 
   return (
     <div>
       <p>Node ID: {node.Id}</p>
       <p>Node Name: {node.Name}</p>
+      <Button onPress={initializeSession} disabled={!!sessionId}>
+        Start Session
+      </Button>
 
-      <h2>Logs</h2>
-      <div>
-        {logs.map((log, index) => (
-          <div key={index}>{log}</div>
-        ))}
-      </div>
-
-      <Divider></Divider>
-      <Input
-        type="text"
-        value={command}
-        onChange={(e) => setCommand(e.target.value)}
-        onKeyPress={(e) => {
-          if (e.key === "Enter") {
-            onClickSendCommand();
-          }
-        }}
+      <div
+        ref={xtermRef}
+        style={{ height: "400px", width: "100%", background: "black" }}
       />
-      <Button onPress={onClickSendCommand}>Send Command</Button>
     </div>
   );
 }

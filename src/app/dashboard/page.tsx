@@ -40,8 +40,8 @@ const Dashboard = () => {
       <h2>Your Nodes</h2>
       <div className="flex flex-col gap-4">
         {nodes?.map((node) => (
-          <div>
-            <div key={node.Id} className="grid grid-cols-3 gap-4 w-[50%]">
+          <div key={node.Id}>
+            <div className="grid grid-cols-3 gap-4 w-[50%]">
               <li>
                 {node.Name} : {node.Status}
               </li>

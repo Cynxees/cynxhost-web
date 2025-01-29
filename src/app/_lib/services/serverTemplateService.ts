@@ -30,7 +30,6 @@ export async function paginateServerCategory(
     PaginateServerTemplateCategoryResponse
   >({ path: "/server-template/paginate-categories" }, request);
 
-  console.log("/server-template/paginate-categories", response);
   return response;
 }
 
@@ -42,7 +41,6 @@ export async function getServerTemplateById(
     req
   );
 
-  console.log("getServerTemplateById", response);
   return response;
 }
 
@@ -54,6 +52,5 @@ export async function validateServerTemplateVariables(
     BaseResponse
   >({ path: "/server-template/validate-variables" }, request);
 
-  console.log("/server-template/validate-variables", response);
   return response;
 }

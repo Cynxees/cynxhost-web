@@ -42,8 +42,9 @@ const DashboardNodeContent = ({ id, nodeData }: DashboardNodeContentProps) => {
 
   return (
     <div>
-      <p>{node.Id}</p>
-      <h1>{node.Name}</h1>
+      <h1>
+        {node.Id}. {node.Name}
+      </h1>
       <ConsoleView node={node}></ConsoleView>
     </div>
   );

@@ -19,7 +19,6 @@ export async function CreatePersistentNode(
     request
   );
 
-  console.log("/persistent-node/create", response);
   return response;
 }
 
@@ -29,7 +28,6 @@ export async function GetPersistentNodes(): Promise<PaginatePersistentNodeRespon
     null
   );
 
-  console.log("/persistent-node/list", response);
   return response;
 }
 
@@ -42,7 +40,6 @@ export async function GetPersistentNode(
     req
   );
 
-  console.log("/persistent-node/get", response);
   return response;
 }
 
@@ -54,6 +51,5 @@ export async function ForceShutdownPersistentNode(
     { persistentNodeId: id }
   );
 
-  console.log("/persistent-node/force-shutdown", response);
   return response;
 }

@@ -34,6 +34,7 @@ export const postData = async <TRequest, TResponse = BaseResponse>(
   options: FetchOption,
   data?: TRequest
 ): Promise<ApiResponse<TResponse>> => {
+  console.log("fetching: ", options.path);
   const snakeCaseData = data ? convertKeysToSnakeCase(data) : undefined;
 
   if (options.authToken) {
@@ -41,6 +42,7 @@ export const postData = async <TRequest, TResponse = BaseResponse>(
   }
 
   const response = await api.post<TResponse>(options.path, snakeCaseData);
+  console.log(options.path, " : ", response.data);
   return response.data;
 };
 
@@ -49,6 +51,7 @@ export const postNodeData = async <TRequest, TResponse = BaseResponse>(
   options: FetchOption,
   data?: TRequest
 ): Promise<ApiResponse<TResponse>> => {
+  console.log("fetching: ", options.path);
   const snakeCaseData = data ? convertKeysToSnakeCase(data) : undefined;
 
   if (options.authToken) {
@@ -65,5 +68,6 @@ export const postNodeData = async <TRequest, TResponse = BaseResponse>(
     }
   );
 
+  console.log(options.path, " : ", response.data);
   return response.data;
 };

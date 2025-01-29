@@ -32,3 +32,7 @@ export type SendCommandNodeSessionRequest = {
   command: string;
   isBase64Encoded: boolean;
 };
+
+export type NodeCreateSessionRequest = {
+  shell: string;
+};
