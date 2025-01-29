@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { Terminal } from "@xterm/xterm";
 import { FitAddon } from "xterm-addon-fit";
@@ -7,19 +9,19 @@ import {
   CreateSession,
   SendCommand,
 } from "@/app/_lib/services/node/consoleService";
-import { PersistentNode } from "@/types/entity/entity";
+import { useNode } from "@/app/_lib/hooks/useNode";
 
-type Props = {
-  node: PersistentNode;
-};
+type Props = {};
 
-export default function ConsoleView({ node }: Props) {
+export default function ConsoleView({}: Props) {
   const [sessionId, setSessionId] = useState<string | null>(null);
 
   const wsRef = useRef<WebSocket | null>(null);
   const xtermRef = useRef<HTMLDivElement | null>(null);
   const xterm = useRef<Terminal | null>(null);
   const inputRef = useRef<string>("");
+
+  const node = useNode().state.node;
 
   // Initialize the terminal
   useEffect(() => {
@@ -50,7 +52,6 @@ export default function ConsoleView({ node }: Props) {
         sessionId,
         isBase64Encoded: true,
       });
-
     });
 
     return () => {

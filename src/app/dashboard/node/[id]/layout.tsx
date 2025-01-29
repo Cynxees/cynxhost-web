@@ -3,23 +3,26 @@ import { withCookie } from "@/app/_lib/services/withCookie";
 import { PersistentNode } from "@/types/entity/entity";
 import { BaseResponse } from "@/types/model/response";
 import { headers } from "next/headers";
-import { Client } from "ssh2";
-import DashboardNodeContent from "./content";
+import NodeProviders from "./provider";
 
-interface SearchParams {
+interface Params {
   id?: string;
 }
 
 export default async function DashboardNodeWrapper({
-  searchParams,
+  params,
+  children,
 }: {
-  searchParams: SearchParams;
+  params: Params;
+  children: React.ReactNode;
 }) {
   // Get ID from URL search params
-  const id = parseInt(searchParams.id || "");
+  const id = parseInt(params.id || "");
   const cookieHeader = (await headers()).get("cookie") || "";
 
-  console.log("Cookie header: ", cookieHeader);
+  if (!id || Array.isArray(id)) {
+    return <div>Node not found</div>;
+  }
 
   // Fetch data server-side
   let nodeData: BaseResponse<PersistentNode> | null = null;
@@ -27,5 +30,13 @@ export default async function DashboardNodeWrapper({
     nodeData = await withCookie(GetPersistentNode, { Id: id });
   }
 
-  return <DashboardNodeContent id={id} nodeData={nodeData} />;
+  if (!nodeData || !nodeData.data) {
+    return <div>Node not found</div>;
+  }
+
+  return (
+    <NodeProviders node={nodeData.data}>
+      <div className="bg-foreground p-10 mt-10">{children}</div>;
+    </NodeProviders>
+  );
 }
