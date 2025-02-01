@@ -2,6 +2,7 @@
 
 import { InstanceType } from "@/types/entity/entity";
 import {
+  Button,
   Spinner,
   Table,
   TableBody,
@@ -86,6 +87,18 @@ export default function OnboardingTierContent({
           <p>CPU: {selectedInstanceType.VcpuCount} vCPU</p>
           <p>Network: 100 Mbps</p>
           <p>Price: {selectedInstanceType.SellPrice}</p>
+
+          <div className="absolute w-[80%] bottom-5 left-1/2 -translate-x-1/2">
+            <Button
+              onPress={() => {
+                state.request.instanceTypeId = selectedInstanceType.Id;
+                router.push("/create-node/form/confirm");
+              }}
+              className="bg-primary text-content2 font-extrabold rounded-lg w-full"
+            >
+              Continue
+            </Button>
+          </div>
         </div>
       </div>
     </div>
