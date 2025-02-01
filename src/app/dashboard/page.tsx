@@ -9,9 +9,11 @@ import { Button, Divider } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "../_lib/hooks/useAuth";
+import Loading from "../loading";
 
 const Dashboard = () => {
   const router = useRouter();
+
   const [loading, isLoading] = useState(true);
 
   const [nodes, setNodes] = useState<PersistentNode[]>();
@@ -26,7 +28,7 @@ const Dashboard = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-xl">Loading...</div>;
+    return <Loading />;
   }
 
   return (
@@ -48,7 +50,7 @@ const Dashboard = () => {
               <Button
                 onPress={() => {
                   console.log("Node ID: ", node.Id);
-                  router.push(`/dashboard/node/${node.Id}`);
+                  router.push(`/dashboard/node/${node.Id}/overview`);
                 }}
                 color="secondary"
               >

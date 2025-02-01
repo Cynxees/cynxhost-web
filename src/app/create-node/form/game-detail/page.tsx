@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import GameDetailContent from "./content";
 import { getServerTemplateById } from "@/app/_lib/services/serverTemplateService";
+import Loading from "@/app/loading";
 interface PageProps {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
@@ -33,7 +34,7 @@ export default async function OnboardingGameDetailPage({
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading />}>
       <GameDetailContent selectedGame={serverTemplate} />
     </Suspense>
   );

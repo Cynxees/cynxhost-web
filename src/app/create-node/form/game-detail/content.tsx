@@ -22,7 +22,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useOnboarding } from "../../../_lib/hooks/useOnboarding";
 import { useQuery } from "@tanstack/react-query";
-import Loading from "./loading";
+import Loading from "@/app/loading";
 
 export default function GameDetailContent({
   selectedGame,
@@ -109,7 +109,7 @@ export default function GameDetailContent({
   };
 
   if (selectedGame == null || isValidatingVariables) {
-    return <Loading></Loading>;
+    return <Loading />;
   }
 
   return (

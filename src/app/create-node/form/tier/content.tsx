@@ -20,10 +20,6 @@ export default function OnboardingTierContent({
 }: {
   instanceTypes: InstanceType[];
 }) {
-  if (!instanceTypes) {
-    return <Spinner />;
-  }
-
   const router = useRouter();
   const { state } = useOnboarding();
 
@@ -31,7 +27,7 @@ export default function OnboardingTierContent({
     useState<InstanceType>(instanceTypes[0]);
 
   if (!state.selectedGame) {
-    // router.push("/create-node/form/game");
+    router.push("/create-node/form/game");
   }
 
   const onClickInstanceType = (instanceType: InstanceType) => {
