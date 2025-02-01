@@ -26,7 +26,7 @@ export default function HomePageContent() {
         </Button>
         <Button
           onPress={() => {
-            router.push("/create-node");
+            router.push("/create-node/form/game");
           }}
           color="default"
           radius="sm"

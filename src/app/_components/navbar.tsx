@@ -40,10 +40,20 @@ const Navbar: React.FC = ({}) => {
         />
 
         <div className="my-auto flex flex-row gap-5">
-          <div className="my-auto hover:bg-secondary cursor-pointer p-2">
+          <div
+            onClick={() => {
+              router.push("/create-node/form/game");
+            }}
+            className="my-auto hover:bg-secondary cursor-pointer p-2"
+          >
             + create
           </div>
-          <div className="my-auto hover:bg-secondary cursor-pointer p-2">
+          <div
+            onClick={() => {
+              router.push("/dashboard");
+            }}
+            className="my-auto hover:bg-secondary cursor-pointer p-2"
+          >
             dashboard
           </div>
           <Avatar className="cursor-pointer" src="/profile.png"></Avatar>
