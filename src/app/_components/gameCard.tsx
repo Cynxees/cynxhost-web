@@ -25,22 +25,24 @@ const GameCard: React.FC<GameCardProps> = ({ game, onClick }) => {
       isPressable
       isBlurred
       className={
-        "relative w-[20vw] aspect-[16/10] " +
+        "relative w-[20vw] aspect-[16/10] animate-appearance-in " +
         (isHovered ? "scale-110 brightness-125 border-white border" : "")
       }
-      onClick={() => onClick(game)}
+      onPress={() => onClick(game)}
       onMouseEnter={onHover}
       onMouseLeave={onHoverExit}
+      radius="none"
     >
       <Image
         src={game.ImageUrl}
         alt={game.Name}
         className="w-full h-full object-cover object-center"
+        radius="none"
       />
 
       <div className="absolute bottom-0 left-0 w-full h-[90%] bg-gradient-to-t from-black/90 to-transparent z-10"></div>
 
-      <CardFooter className="absolute bottom-2 font-extrabold text-5xl left-2 z-20 text-white">
+      <CardFooter className="absolute -bottom-8 font-nats text-[5rem] left-2 z-20 text-white">
         {game.Name}
       </CardFooter>
     </Card>

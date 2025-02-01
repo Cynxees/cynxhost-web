@@ -4,7 +4,6 @@ import { Alert, Button, Card, Divider, Form, Input, Link } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@/app/_lib/hooks/useAuth";
-import { getProfile, loginUser } from "../_lib/services/userService";
 
 export default function LoginContent() {
   const [username, setUsername] = useState("");

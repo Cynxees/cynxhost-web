@@ -1,6 +1,12 @@
 import { BaseResponse } from "@/types/model/response";
+import { FetchOption } from "@/types/service/option";
 import axios from "axios";
 import { snakeCase } from "lodash";
+import https from "https";
+
+const agent = new https.Agent({
+  rejectUnauthorized: false, // Disables SSL verification
+});
 
 const api = axios.create({
   baseURL: "https://cynx.buzz/api/v1",
@@ -24,21 +30,44 @@ const convertKeysToSnakeCase = (obj: any): any => {
   return obj;
 };
 
-export const fetchData = async <T>(path: string): Promise<ApiResponse<T>> => {
-  try {
-    const response = await api.get(path);
-    return response.data;
-  } catch (error) {
-    console.debug(error);
-    throw error;
-  }
-};
-
 export const postData = async <TRequest, TResponse = BaseResponse>(
-  path: string,
+  options: FetchOption,
   data?: TRequest
 ): Promise<ApiResponse<TResponse>> => {
+  console.log("fetching: ", options.path);
   const snakeCaseData = data ? convertKeysToSnakeCase(data) : undefined;
-  const response = await api.post<TResponse>(path, snakeCaseData);
+
+  if (options.authToken) {
+    api.defaults.headers.Cookie = `AuthToken=${options.authToken}`;
+  }
+
+  const response = await api.post<TResponse>(options.path, snakeCaseData);
+  console.log(options.path, " : ", response.data);
+  return response.data;
+};
+
+export const postNodeData = async <TRequest, TResponse = BaseResponse>(
+  serverAlias: string,
+  options: FetchOption,
+  data?: TRequest
+): Promise<ApiResponse<TResponse>> => {
+  console.log("fetching: ", options.path);
+  const snakeCaseData = data ? convertKeysToSnakeCase(data) : undefined;
+
+  if (options.authToken) {
+    api.defaults.headers.Cookie = `AuthToken=${options.authToken}`;
+  }
+
+  const baseURL = `https://${serverAlias}.cynx.buzz/api/v1`;
+
+  const response = await axios.post<TResponse>(
+    `${baseURL}${options.path}`,
+    snakeCaseData,
+    {
+      httpsAgent: agent,
+    }
+  );
+
+  console.log(options.path, " : ", response.data);
   return response.data;
 };

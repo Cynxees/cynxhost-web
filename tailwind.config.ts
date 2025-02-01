@@ -1,6 +1,6 @@
 import { heroui } from "@heroui/react";
 import type { Config } from "tailwindcss";
-import { CustomLayoutTheme, DarkColorTheme } from "./config/theme";
+import { CustomLayoutTheme, LightColorTheme } from "./config/theme";
 
 export default {
   content: [
@@ -11,7 +11,7 @@ export default {
   ],
   theme: {
     extend: {
-      colors: DarkColorTheme,
+      colors: LightColorTheme,
       animation: {
         "pulse-brightness": "pulse-brightness 6s ease-in-out infinite",
       },
@@ -21,17 +21,30 @@ export default {
           "50%": { filter: "brightness(0.3)" },
         },
       },
+      fontFamily: {
+        inter: ["var(--font-inter)", "sans-serif"],
+        nats: ["var(--font-nats)", "sans-serif"],
+        montserratAlternateLight: [
+          "var(--font-montserrat-alternate-light)",
+          "sans-serif",
+        ],
+      },
+      dropShadow: {
+        medium: "0 5px 5px rgba(0, 0, 0, 0.30)",
+        heavy: "0 5px 5px rgba(0, 0, 0, 0.55)",
+      },
     },
   },
   darkMode: "class",
   plugins: [
     heroui({
+      addCommonColors: true,
       prefix: "cynxhost",
-      defaultTheme: "dark",
+      defaultTheme: "light",
       themes: {
-        dark: {
+        light: {
           layout: CustomLayoutTheme,
-          colors: DarkColorTheme,
+          colors: LightColorTheme,
         },
       },
     }),

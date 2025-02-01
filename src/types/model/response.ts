@@ -24,3 +24,7 @@ export type GetProfileResponse = BaseResponse<{
 export type CheckUsernameRequest = {
   username: string;
 };
+
+export type ConsoleCreateSessionResponse = BaseResponse<{
+  SessionId: string;
+}>;

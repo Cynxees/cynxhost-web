@@ -4,7 +4,7 @@ import { useOnboarding } from "@/app/_lib/hooks/useOnboarding";
 import { Divider, Progress } from "@heroui/react";
 import { useRouter, usePathname } from "next/navigation";
 import { ReactNode } from "react";
-import { ArrowLeft } from "solar-icon-set";
+import { AltArrowLeft, ArrowLeft } from "solar-icon-set";
 
 type Step = {
   route: string;
@@ -15,28 +15,28 @@ type Step = {
 
 const steps: Step[] = [
   {
-    route: "/onboarding/form/game",
-    text: "Game",
+    route: "/create-node/form/game",
+    text: "Choose your game",
     percent: 10,
-    title: "Choose your game",
+    title: "Select Starting Template",
   },
   {
-    route: "/onboarding/form/game-detail",
-    text: "Game Details",
+    route: "/create-node/form/game-detail",
+    text: "",
     percent: 25,
-    title: "Game Details",
+    title: "Complete Starting Template",
   },
   {
-    route: "/onboarding/form/tier",
-    text: "Tier",
-    percent: 55,
-    title: "Choose your tier",
+    route: "/create-node/form/tier",
+    text: "Pick your Server Tier",
+    percent: 50,
+    title: "Select Server Tier",
   },
   {
-    route: "/onboarding/form/confirm",
+    route: "/create-node/form/confirm",
     text: "Confirm",
-    percent: 75,
-    title: "Confirm",
+    percent: 90,
+    title: "Confirm your Order",
   },
 ];
 
@@ -54,6 +54,10 @@ export default function OnboardingLayoutContent({
   // Find the current step based on the current route
   const currentStep =
     steps.findIndex((step) => step.route === currentRoute) + 1;
+
+  if (currentStep === 0) {
+    return <div>{children};</div>;
+  }
 
   const onClickBack = () => {
     // Go back to the previous step
@@ -76,14 +80,13 @@ export default function OnboardingLayoutContent({
   };
 
   return (
-    <div className="flex flex-col gap-6 pt-6">
-      <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-12 pt-12 px-20">
+      <div className="flex flex-col gap-2 w-full mx-auto drop-shadow-2xl">
         <Progress
           about="Progress bar"
-          className="bg-foreground"
           value={steps[currentStep - 1].percent}
           classNames={{
-            track: "",
+            track: "bg-foreground drop-shadow-heavy",
             indicator: "bg-gradient-to-r from-secondary to-primary",
           }}
         />
@@ -92,11 +95,21 @@ export default function OnboardingLayoutContent({
             {steps.map((step, index) => (
               <div
                 key={index}
+                onClick={() => {
+                  if (index + 1 < currentStep) router.push(step.route);
+                }}
                 style={{
                   left: `${step.percent}%`,
-                  transform: index === 0 ? "translateX(0)" : "translateX(-50%)",
+                  transform: "translateX(-50%)",
                 }}
-                className="absolute"
+                className={
+                  `absolute shadow-black shadow-2xl ` +
+                  (index + 1 == currentStep
+                    ? "text-primary"
+                    : index + 1 < currentStep
+                    ? "text-secondary cursor-pointer hover:text-primary"
+                    : "")
+                }
               >
                 {step.text}
               </div>
@@ -105,24 +118,21 @@ export default function OnboardingLayoutContent({
         </div>
       </div>
 
-      {currentStep === 1 ? (
-        ""
-      ) : (
-        <>
-          <div className="flex flex-row gap-2 h-10">
-            <ArrowLeft
-              className="mt-auto cursor-pointer hover:scale-105"
+      <div className="flex justify-between items-center w-full">
+        <div className="relative mx-auto">
+          {currentStep > 1 && (
+            <AltArrowLeft
+              className="my-auto cursor-pointer hover:scale-105 absolute -left-10 top-1/2 -translate-y-1/2"
               size={30}
               onClick={onClickBack}
-              color="cyan"
+              color="black"
             />
-            {steps[currentStep - 1].title && (
-              <h1 className="my-auto">{steps[currentStep - 1].title}</h1>
-            )}
-          </div>
-          <Divider className="w-full h-0.5" />
-        </>
-      )}
+          )}
+          <h1 className="my-auto text-center justify-center text-5xl font-montserratAlternateLight drop-shadow-medium">
+            {steps[currentStep - 1].title}
+          </h1>
+        </div>
+      </div>
 
       <div className="">{children}</div>
     </div>

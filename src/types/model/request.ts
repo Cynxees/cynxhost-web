@@ -26,3 +26,13 @@ export type ValidateServerTemplateVariablesRequest = {
   serverTemplateId: number;
   variables: ServerTemplateScriptVariable[];
 };
+
+export type SendCommandNodeSessionRequest = {
+  sessionId: string;
+  command: string;
+  isBase64Encoded: boolean;
+};
+
+export type NodeCreateSessionRequest = {
+  shell: string;
+};

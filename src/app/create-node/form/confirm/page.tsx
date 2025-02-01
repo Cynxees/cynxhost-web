@@ -15,7 +15,7 @@ export default function OnboardingConfirmPage() {
     state.request.storageSizeMb == undefined ||
     state.request.serverTemplateId === undefined
   ) {
-    router.push("/onboarding/form/game");
+    router.push("/create-node/form/game");
     return;
   }
 

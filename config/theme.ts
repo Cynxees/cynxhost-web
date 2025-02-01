@@ -1,27 +1,49 @@
 // config/theme.ts
 
-import { LayoutTheme, ThemeColors } from "@heroui/react";
+import { ColorScale, LayoutTheme, ThemeColors } from "@heroui/react";
 
-export const DarkColorTheme: Partial<ThemeColors> = {
-  primary: "#a6e1fa",
-  secondary: "#0e6ba8",
+const LightPrimary: ColorScale = {
+  DEFAULT: "#D30000",
+  "50": "#FF2C2C",
+  "100": "#D30000",
+  "200": "#B50000",
+  "300": "#9A0202",
 
-  content1: "#383838",
-  content2: "#FFFFFF",
+  "500": "#6D0000",
+};
+
+const LightContent3: ColorScale = {
+  DEFAULT: "#666666",
+  "50": "#999999",
+  "100": "#666666",
+  "200": "#4D4D4D",
+  "300": "#333333",
+  "400": "#1A1A1A",
+  "500": "#000000",
+};
+
+export const LightColorTheme: Partial<ThemeColors> = {
+  primary: LightPrimary,
+  secondary: "#FF9090",
+
+  content1: "#383838", // black
+  content2: "#FFFFFF", // white
+  content3: LightContent3, // grey
 
   divider: "#525252",
 
-  background: "#0a0908", // Background for every page
-  foreground: "#0c1821", // Like second bg, for cards etc
-  overlay: "#1b2a41", // things on top of foreground
+  background: "#E2E3E3", // Background for every page
+  foreground: "#FFFFFF", // Like second bg, for cards etca
+
+  overlay: "#d81159",
+
+  default: "#F6F6F6",
 
   // not set yet
   success: "#d81159",
   warning: "#d81159",
-  content3: "#d81159",
   content4: "#d81159",
   danger: "#d81159",
-  default: "#d81159",
   focus: "#d81159",
 };
 

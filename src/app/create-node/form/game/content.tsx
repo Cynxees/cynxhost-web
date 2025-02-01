@@ -1,12 +1,11 @@
 "use client";
 
-import GameCard from "@/app/_components/onboarding/gameCard";
+import GameCard from "@/app/_components/gameCard";
 import { paginateServerCategory } from "@/app/_lib/services/serverTemplateService";
 import { ServerTemplateCategory } from "@/types/entity/entity";
-import { BreadcrumbItem, Breadcrumbs, Divider, Spinner } from "@heroui/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { BreadcrumbItem, Breadcrumbs, Input, Spinner } from "@heroui/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowLeft } from "solar-icon-set";
 import { useOnboarding } from "../../../_lib/hooks/useOnboarding";
 
 export default function OnboardingGameContent({
@@ -22,7 +21,7 @@ export default function OnboardingGameContent({
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        if (state.selectedCategory == null) {
+        if (state.selectedCategory == null || state.selectedCategory.Id == 0) {
           const result = await paginateServerCategory({ page: 1, size: 10 });
           setCategories(result.data?.ServerTemplateCategories || []);
         } else {
@@ -57,7 +56,7 @@ export default function OnboardingGameContent({
     try {
       if (category.ServerTemplateId != null) {
         router.push(
-          `/onboarding/form/game-detail?id=${encodeURIComponent(
+          `/create-node/form/game-detail?id=${encodeURIComponent(
             category.ServerTemplateId
           )}`
         );
@@ -102,33 +101,49 @@ export default function OnboardingGameContent({
   return (
     <>
       <div className="flex flex-row justify-between items-center">
-        <div className="flex flex-row gap-2 h-10">
-          <ArrowLeft
-            className="mt-auto cursor-pointer hover:scale-105"
-            size={30}
-            onClick={onClickBack}
-            color="cyan"
-          />
-          {<h1 className="my-auto">{"Choose Your Game"}</h1>}
+        <div className="grid grid-cols-3 justify-between items-center w-full">
+          <div>
+            {state.parentHistory.length > 0 && (
+              <Breadcrumbs variant="solid">
+                {state.parentHistory.map((category) => (
+                  <BreadcrumbItem
+                    key={category.Id}
+                    onPress={() =>
+                      onClickBreadcrumb(state.parentHistory.indexOf(category))
+                    }
+                    className={`cursor-pointer `}
+                    color="primary"
+                  >
+                    {category.Name}
+                  </BreadcrumbItem>
+                ))}
+              </Breadcrumbs>
+            )}
+          </div>
+
+          <div className="relative items-center justify-center flex">
+            <div className="relative">
+              {/* <AltArrowLeft
+                className="my-auto cursor-pointer hover:scale-105 absolute -left-10"
+                size={30}
+                onClick={onClickBack}
+                color="black"
+              /> */}
+              {/* <h1 className="my-auto text-center justify-center text-5xl font-nats">
+                Select Starting Template
+              </h1> */}
+            </div>
+          </div>
+
+          <Input
+            isClearable
+            placeholder="Search your game"
+            className="bg-white w-[20vw] ml-auto drop-shadow-heavy rounded-lg"
+          ></Input>
         </div>
-        {state.parentHistory.length > 0 && (
-          <Breadcrumbs variant="solid" color="secondary">
-            {state.parentHistory.map((category) => (
-              <BreadcrumbItem
-                key={category.Id}
-                onClick={() =>
-                  onClickBreadcrumb(state.parentHistory.indexOf(category))
-                }
-                className="cursor-pointer"
-              >
-                {category.Name}
-              </BreadcrumbItem>
-            ))}
-          </Breadcrumbs>
-        )}
       </div>
-      <Divider className="w-full h-0.5 my-4"></Divider>
-      <div className="h-screen flex flex-col items-start">
+
+      <div className="flex flex-col items-start mt-12">
         <div className="grid grid-cols-4 gap-4 w-full">
           {categories.map((category, index) => (
             <div
