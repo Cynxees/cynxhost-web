@@ -22,9 +22,9 @@ const Navbar: React.FC = ({}) => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const hideNavbarRoutes = ["/login", "/register"];
+  const hideNavbarRoutes = ["dashboard"];
 
-  if (hideNavbarRoutes.includes(pathname)) {
+  if (hideNavbarRoutes.some((route) => pathname.includes(route))) {
     return null;
   }
 

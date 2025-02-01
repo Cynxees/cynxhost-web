@@ -103,6 +103,7 @@ export default function GameDetailContent({
 
     setState({
       ...state,
+      selectedGame: selectedGame,
       request: request,
     });
     router.push(`/create-node/form/tier`);

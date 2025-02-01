@@ -26,9 +26,11 @@ export default function OnboardingTierContent({
   const [selectedInstanceType, setSelectedInstanceType] =
     useState<InstanceType>(instanceTypes[0]);
 
-  if (!state.selectedGame) {
-    router.push("/create-node/form/game");
-  }
+  useEffect(() => {
+    if (!state.selectedGame) {
+      router.push("/create-node/form/game");
+    }
+  }, []);
 
   const onClickInstanceType = (instanceType: InstanceType) => {
     setSelectedInstanceType(instanceType);

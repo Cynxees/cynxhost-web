@@ -11,7 +11,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <HeroUIProvider>
-        <LoadingProvider>{children}</LoadingProvider>
+        {/* <LoadingProvider> */}
+          {children}
+          {/* </LoadingProvider> */}
       </HeroUIProvider>
     </QueryClientProvider>
   );
