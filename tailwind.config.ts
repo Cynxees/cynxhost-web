@@ -33,6 +33,7 @@ export default {
   darkMode: "class",
   plugins: [
     heroui({
+      addCommonColors: true,
       prefix: "cynxhost",
       defaultTheme: "dark",
       themes: {

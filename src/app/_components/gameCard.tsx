@@ -25,10 +25,10 @@ const GameCard: React.FC<GameCardProps> = ({ game, onClick }) => {
       isPressable
       isBlurred
       className={
-        "relative w-[20vw] aspect-[16/10] drop-shadow-2xl" +
+        "relative w-[20vw] aspect-[16/10] " +
         (isHovered ? "scale-110 brightness-125 border-white border" : "")
       }
-      onClick={() => onClick(game)}
+      onPress={() => onClick(game)}
       onMouseEnter={onHover}
       onMouseLeave={onHoverExit}
       radius="none"
@@ -36,7 +36,6 @@ const GameCard: React.FC<GameCardProps> = ({ game, onClick }) => {
       <Image
         src={game.ImageUrl}
         alt={game.Name}
-        height={"100%"}
         className="w-full h-full object-cover object-center"
         radius="none"
       />

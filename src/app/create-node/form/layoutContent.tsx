@@ -80,7 +80,7 @@ export default function OnboardingLayoutContent({
   };
 
   return (
-    <div className="flex flex-col gap-6 pt-12">
+    <div className="flex flex-col gap-12 pt-12">
       <div className="flex flex-col gap-2 w-[60%] mx-auto drop-shadow-2xl">
         <Progress
           about="Progress bar"
@@ -134,7 +134,7 @@ export default function OnboardingLayoutContent({
         </>
       )}
 
-      <div className="">{children}</div>
+      <div className="px-20">{children}</div>
     </div>
   );
 }

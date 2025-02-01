@@ -7,7 +7,13 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 
   const [state, setState] = useState<OnboardingState>({
     request: {},
-    parentHistory: [],
+    parentHistory: [
+      {
+        Id: 0,
+        Name: "Home",
+        ParentId: 0,
+      },
+    ],
   });
 
   console.log("OnboardingProvider state", state);

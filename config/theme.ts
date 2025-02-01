@@ -12,12 +12,13 @@ export const LightColorTheme: Partial<ThemeColors> = {
   divider: "#525252",
 
   background: "#E2E3E3", // Background for every page
-  foreground: "#F6F6F6", // Like second bg, for cards etc
+  foreground: "#FFFFFF", // Like second bg, for cards etca
+
+  overlay: "#d81159", 
 
   default: "#F6F6F6",
 
   // not set yet
-  overlay: "#d81159",
   success: "#d81159",
   warning: "#d81159",
   content3: "#d81159",
