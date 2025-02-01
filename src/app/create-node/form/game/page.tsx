@@ -11,7 +11,7 @@ export default async function GameListPage() {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <OnboardingGameContent games={games.data.ServerTemplateCategories} />;
+      <OnboardingGameContent games={games.data.ServerTemplateCategories} />
     </Suspense>
   );
 }

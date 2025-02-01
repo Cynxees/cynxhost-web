@@ -56,7 +56,7 @@ export default function OnboardingLayoutContent({
     steps.findIndex((step) => step.route === currentRoute) + 1;
 
   if (currentStep === 0) {
-    return <div>{children};</div>;
+    return <div>{children}</div>;
   }
 
   const onClickBack = () => {
