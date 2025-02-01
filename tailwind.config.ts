@@ -24,8 +24,13 @@ export default {
       fontFamily: {
         inter: ["var(--font-inter)", "sans-serif"],
         nats: ["var(--font-nats)", "sans-serif"],
+        montserratAlternateLight: [
+          "var(--font-montserrat-alternate-light)",
+          "sans-serif",
+        ],
       },
       dropShadow: {
+        medium: "0 5px 5px rgba(0, 0, 0, 0.30)",
         heavy: "0 5px 5px rgba(0, 0, 0, 0.55)",
       },
     },
@@ -35,9 +40,9 @@ export default {
     heroui({
       addCommonColors: true,
       prefix: "cynxhost",
-      defaultTheme: "dark",
+      defaultTheme: "light",
       themes: {
-        dark: {
+        light: {
           layout: CustomLayoutTheme,
           colors: LightColorTheme,
         },

@@ -26,6 +26,11 @@ const natsFont = localFont({
   variable: "--font-nats",
 });
 
+const monserratAlternateLightFont = localFont({
+  src: "./_assets/fonts/montserrat_alternates/MontserratAlternates-Light.ttf",
+  variable: "--font-montserrat-alternate-light",
+});
+
 export const metadata: Metadata = {
   title: "CynxHost",
   description: "Hosting Website",
@@ -39,7 +44,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${interFont.variable} ${natsFont.variable} font-inter antialiased bg-background text-content1`}
+        className={`${interFont.variable} ${natsFont.variable} ${monserratAlternateLightFont.variable} font-inter antialiased bg-background text-content1`}
       >
         <Providers>
           <Navbar />

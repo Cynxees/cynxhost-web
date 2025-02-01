@@ -9,9 +9,17 @@ import {
   CreatePersistentNodeRequest,
   ServerTemplateScriptVariable,
 } from "@/types/model/request";
-import { Button, Divider, Select, SelectItem, Slider } from "@heroui/react";
+import {
+  Button,
+  Divider,
+  Form,
+  Image,
+  Select,
+  SelectItem,
+  Slider,
+} from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useOnboarding } from "../../../_lib/hooks/useOnboarding";
 
 export default function GameDetailContent({
@@ -57,7 +65,9 @@ export default function GameDetailContent({
     ]);
   };
 
-  const onClickSubmit = async () => {
+  const onClickSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     // Validate server template variables
     const request: Partial<CreatePersistentNodeRequest> = {
       ...state.request,
@@ -96,64 +106,98 @@ export default function GameDetailContent({
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <p className="text-xl font-bold">{selectedGame.Name}</p>
-        <p>{selectedGame.Description}</p>
-      </div>
+    <Form
+      onSubmit={onClickSubmit}
+      validationBehavior="native"
+      className="flex flex-col gap-6 relative"
+    >
+      <div className="flex flex-row gap-12">
+        <Image
+          src={selectedGame.ImageUrl}
+          radius="none"
+          className="w-[20vw] drop-shadow-heavy"
+        />
 
-      <div>
-        {selectedGame?.Variables?.map((variable) => (
-          <Select
-            isRequired
-            key={variable.Name}
-            className="w-72"
-            label={variable.Name}
-            placeholder={"Select " + variable.Name}
-            aria-label={`Select ${variable.Name}`}
-            items={variable.Content}
-            onChange={(value) => handleVariableChange(variable.Name, value)}
-          >
-            {(content) => (
-              <SelectItem
-                key={content.Name}
-                className="bg-foreground"
-                value={content.Name}
+        <div className="flex flex-col gap-20">
+          <div>
+            <p className="text-xl">{selectedGame.Name}</p>
+            <p className="text-content3 font-semibold">
+              {selectedGame.Description}
+            </p>
+          </div>
+
+          <div>
+            {selectedGame?.Variables?.map((variable) => (
+              <Select
+                isRequired
+                key={variable.Name}
+                className="w-72 drop-shadow-medium"
+                label={variable.Name}
+                placeholder={"Select " + variable.Name}
+                aria-label={`Select ${variable.Name}`}
+                labelPlacement="outside"
+                items={variable.Content}
+                value={
+                  selectedVariables.find((v) => v.name === variable.Name)?.value
+                }
+                errorMessage={
+                  !selectedVariables.some(
+                    (v) => v.name === variable.Name && v.value
+                  )
+                    ? "This field is required"
+                    : undefined
+                }
+                onChange={(value) => handleVariableChange(variable.Name, value)}
+                radius="lg"
+                classNames={{
+                  base: "bg-content2",
+                  label: "!text-black",
+                  listbox: "bg-content2",
+                  listboxWrapper: "bg-content2",
+                  mainWrapper: "bg-content2",
+                  helperWrapper: "bg-content2",
+                  innerWrapper: "bg-content2",
+                  popoverContent: "bg-content2",
+                }}
               >
-                {content.Name}
-              </SelectItem>
-            )}
-          </Select>
-        ))}
+                {(content) => (
+                  <SelectItem
+                    key={content.Name}
+                    className=""
+                    value={content.Name}
+                  >
+                    {content.Name}
+                  </SelectItem>
+                )}
+              </Select>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <Divider className="w-full h-0.5" />
+      <div className="fixed bottom-0 left-0 -z-10">
+        <Image
+          src="/images/decors/minecraft_pigs_bottom_left.png"
+          height={"40vh"}
+        ></Image>
+      </div>
 
-      <div className="flex flex-col gap-6 bg-foreground p-6 rounded-xl">
-        <p className="text-xl">Storage Size</p>
-        <Slider
-          value={selectedStorageSize}
-          label="Storage Size"
-          aria-label="Storage Size"
-          onChange={(value) =>
-            setSelectedStorageSize(Array.isArray(value) ? value[0] : value)
-          }
-          maxValue={32}
-          minValue={0}
-          step={1}
-          showSteps={true}
-          formatOptions={{ style: "unit", unit: "gigabyte" }}
-          showTooltip={true}
+      <Image src="/images/decors/grey_mesh_corner.png" className="fixed bottom-0 right-0 -z-10 h-[70vh]">
+
+      </Image>
+
+      <div className="fixed bottom-0 flex flex-row w-full pr-40 justify-between">
+        <div></div>
+
+        <Button
           color="primary"
-          classNames={{
-            track: "bg-overlay",
-          }}
-        ></Slider>
+          type="submit"
+          className="text-content2 font-extrabold text-lg w-72 mb-20 hover:border-primary-500 hover:brightness-125 hover:motion-reduce:animate-pulse border-medium border-transparent drop-shadow-medium"
+          radius="sm"
+        >
+          Continue
+        </Button>
       </div>
-
-      <Button color="primary" onPress={onClickSubmit}>
-        Continue
-      </Button>
-    </div>
+    </Form>
   );
 }

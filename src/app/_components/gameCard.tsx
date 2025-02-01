@@ -25,7 +25,7 @@ const GameCard: React.FC<GameCardProps> = ({ game, onClick }) => {
       isPressable
       isBlurred
       className={
-        "relative w-[20vw] aspect-[16/10] " +
+        "relative w-[20vw] aspect-[16/10] animate-appearance-in " +
         (isHovered ? "scale-110 brightness-125 border-white border" : "")
       }
       onPress={() => onClick(game)}

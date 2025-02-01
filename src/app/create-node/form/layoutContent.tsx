@@ -4,7 +4,7 @@ import { useOnboarding } from "@/app/_lib/hooks/useOnboarding";
 import { Divider, Progress } from "@heroui/react";
 import { useRouter, usePathname } from "next/navigation";
 import { ReactNode } from "react";
-import { ArrowLeft } from "solar-icon-set";
+import { AltArrowLeft, ArrowLeft } from "solar-icon-set";
 
 type Step = {
   route: string;
@@ -18,13 +18,13 @@ const steps: Step[] = [
     route: "/create-node/form/game",
     text: "Choose your game",
     percent: 10,
-    title: "Choose your game",
+    title: "Select Starting Template",
   },
   {
     route: "/create-node/form/game-detail",
     text: "",
-    percent: 10,
-    title: "Game Details",
+    percent: 25,
+    title: "Complete Starting Template",
   },
   {
     route: "/create-node/form/tier",
@@ -80,8 +80,8 @@ export default function OnboardingLayoutContent({
   };
 
   return (
-    <div className="flex flex-col gap-12 pt-12">
-      <div className="flex flex-col gap-2 w-[60%] mx-auto drop-shadow-2xl">
+    <div className="flex flex-col gap-12 pt-12 px-20">
+      <div className="flex flex-col gap-2 w-full mx-auto drop-shadow-2xl">
         <Progress
           about="Progress bar"
           value={steps[currentStep - 1].percent}
@@ -95,6 +95,9 @@ export default function OnboardingLayoutContent({
             {steps.map((step, index) => (
               <div
                 key={index}
+                onClick={() => {
+                  if (index + 1 < currentStep) router.push(step.route);
+                }}
                 style={{
                   left: `${step.percent}%`,
                   transform: "translateX(-50%)",
@@ -104,7 +107,7 @@ export default function OnboardingLayoutContent({
                   (index + 1 == currentStep
                     ? "text-primary"
                     : index + 1 < currentStep
-                    ? "text-secondary cursor-pointer"
+                    ? "text-secondary cursor-pointer hover:text-primary"
                     : "")
                 }
               >
@@ -115,26 +118,23 @@ export default function OnboardingLayoutContent({
         </div>
       </div>
 
-      {currentStep === 1 ? (
-        ""
-      ) : (
-        <>
-          <div className="flex flex-row gap-2 h-10">
-            <ArrowLeft
-              className="mt-auto cursor-pointer hover:scale-105"
+      <div className="flex justify-between items-center w-full">
+        <div className="relative mx-auto">
+          {currentStep > 1 && (
+            <AltArrowLeft
+              className="my-auto cursor-pointer hover:scale-105 absolute -left-10 top-1/2 -translate-y-1/2"
               size={30}
               onClick={onClickBack}
-              color="cyan"
+              color="black"
             />
-            {steps[currentStep - 1].title && (
-              <h1 className="my-auto">{steps[currentStep - 1].title}</h1>
-            )}
-          </div>
-          <Divider className="w-full h-0.5" />
-        </>
-      )}
+          )}
+          <h1 className="my-auto text-center justify-center text-5xl font-montserratAlternateLight drop-shadow-medium">
+            {steps[currentStep - 1].title}
+          </h1>
+        </div>
+      </div>
 
-      <div className="px-20">{children}</div>
+      <div className="">{children}</div>
     </div>
   );
 }

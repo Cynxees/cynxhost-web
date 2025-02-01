@@ -129,9 +129,9 @@ export default function OnboardingGameContent({
                 onClick={onClickBack}
                 color="black"
               /> */}
-              <h1 className="my-auto text-center justify-center text-5xl font-nats">
+              {/* <h1 className="my-auto text-center justify-center text-5xl font-nats">
                 Select Starting Template
-              </h1>
+              </h1> */}
             </div>
           </div>
 
