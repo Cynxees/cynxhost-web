@@ -15,27 +15,27 @@ type Step = {
 
 const steps: Step[] = [
   {
-    route: "/onboarding/form/game",
-    text: "Game",
+    route: "/create-node/form/game",
+    text: "Choose your game",
     percent: 10,
     title: "Choose your game",
   },
   {
-    route: "/onboarding/form/game-detail",
-    text: "Game Details",
-    percent: 25,
+    route: "/create-node/form/game-detail",
+    text: "",
+    percent: 10,
     title: "Game Details",
   },
   {
-    route: "/onboarding/form/tier",
+    route: "/create-node/form/tier",
     text: "Tier",
-    percent: 55,
+    percent: 50,
     title: "Choose your tier",
   },
   {
-    route: "/onboarding/form/confirm",
+    route: "/create-node/form/confirm",
     text: "Confirm",
-    percent: 75,
+    percent: 90,
     title: "Confirm",
   },
 ];
@@ -54,6 +54,10 @@ export default function OnboardingLayoutContent({
   // Find the current step based on the current route
   const currentStep =
     steps.findIndex((step) => step.route === currentRoute) + 1;
+
+  if (currentStep === 0) {
+    return <div>{children};</div>;
+  }
 
   const onClickBack = () => {
     // Go back to the previous step
@@ -76,14 +80,13 @@ export default function OnboardingLayoutContent({
   };
 
   return (
-    <div className="flex flex-col gap-6 pt-6">
-      <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-6 pt-12">
+      <div className="flex flex-col gap-2 w-[60%] mx-auto drop-shadow-2xl">
         <Progress
           about="Progress bar"
-          className="bg-foreground"
           value={steps[currentStep - 1].percent}
           classNames={{
-            track: "",
+            track: "bg-foreground drop-shadow-heavy",
             indicator: "bg-gradient-to-r from-secondary to-primary",
           }}
         />
@@ -94,9 +97,16 @@ export default function OnboardingLayoutContent({
                 key={index}
                 style={{
                   left: `${step.percent}%`,
-                  transform: index === 0 ? "translateX(0)" : "translateX(-50%)",
+                  transform: "translateX(-50%)",
                 }}
-                className="absolute"
+                className={
+                  `absolute shadow-black shadow-2xl ` +
+                  (index + 1 == currentStep
+                    ? "text-primary"
+                    : index + 1 < currentStep
+                    ? "text-secondary cursor-pointer"
+                    : "")
+                }
               >
                 {step.text}
               </div>

@@ -13,7 +13,7 @@ import { useNode } from "@/app/_lib/hooks/useNode";
 
 type Props = {};
 
-export default function ConsoleView({}: Props) {
+export default function ConsolePage({}: Props) {
   const [sessionId, setSessionId] = useState<string | null>(null);
 
   const wsRef = useRef<WebSocket | null>(null);

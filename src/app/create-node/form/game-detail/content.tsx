@@ -88,7 +88,7 @@ export default function GameDetailContent({
       request: request,
     });
 
-    router.push(`/onboarding/form/tier`);
+    router.push(`/create-node/form/tier`);
   };
 
   if (selectedGame == null) {

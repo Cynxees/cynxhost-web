@@ -1,6 +1,6 @@
 "use client";
 
-import GameCard from "@/app/_components/onboarding/gameCard";
+import GameCard from "@/app/_components/gameCard";
 import { paginateServerCategory } from "@/app/_lib/services/serverTemplateService";
 import { ServerTemplateCategory } from "@/types/entity/entity";
 import { BreadcrumbItem, Breadcrumbs, Divider, Spinner } from "@heroui/react";
@@ -57,7 +57,7 @@ export default function OnboardingGameContent({
     try {
       if (category.ServerTemplateId != null) {
         router.push(
-          `/onboarding/form/game-detail?id=${encodeURIComponent(
+          `/create-node/form/game-detail?id=${encodeURIComponent(
             category.ServerTemplateId
           )}`
         );
@@ -127,8 +127,8 @@ export default function OnboardingGameContent({
           </Breadcrumbs>
         )}
       </div>
-      <Divider className="w-full h-0.5 my-4"></Divider>
-      <div className="h-screen flex flex-col items-start">
+
+      <div className="flex flex-col items-start">
         <div className="grid grid-cols-4 gap-4 w-full">
           {categories.map((category, index) => (
             <div

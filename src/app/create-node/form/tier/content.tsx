@@ -16,12 +16,12 @@ export default function OnboardingTierContent({
   const { state } = useOnboarding();
 
   if (state.selectedGame == null) {
-    router.push("/onboarding/form/game");
+    router.push("/create-node/form/game");
   }
 
   const onClickInstanceType = async (instanceType: InstanceType) => {
     state.request.instanceTypeId = instanceType.Id;
-    router.push("/onboarding/form/confirm");
+    router.push("/create-node/form/confirm");
   };
 
   return (

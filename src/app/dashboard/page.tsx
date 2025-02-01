@@ -48,7 +48,7 @@ const Dashboard = () => {
               <Button
                 onPress={() => {
                   console.log("Node ID: ", node.Id);
-                  router.push(`/dashboard/node?id=${node.Id}`);
+                  router.push(`/dashboard/node/${node.Id}`);
                 }}
                 color="secondary"
               >

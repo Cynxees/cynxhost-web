@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { getProfile } from "../_lib/services/userService";
 import { useAuth } from "../_lib/hooks/useAuth";
+import { Avatar } from "@heroui/react";
 
 const Navbar: React.FC = ({}) => {
   const { profileData, isLoading } = useAuth();
@@ -28,37 +29,28 @@ const Navbar: React.FC = ({}) => {
   }
 
   return (
-    <nav className="bg-transparent top-0 left-0 w-full shadow-lg relative z-50">
-      <div className="bg-foreground py-6 rounded-3xl">
-        <div className="flex justify-between items-center w-full px-10">
-          {/* Logo or brand name */}
-          <Link href="/" className=" text-3xl font-extrabold">
-            CynxHost
-          </Link>
+    <nav className="bg-foreground h-[10vh] w-screen z-50 flex flex-col drop-shadow-2xl">
+      <div className="h-4/5 flex px-20 justify-between">
+        <img
+          onClick={() => {
+            router.push("/");
+          }}
+          src="/cynx.png"
+          className="h-2/3 w-auto mt-auto cursor-pointer hover:opacity-60"
+        />
 
-          {/* Navigation links */}
-          <div className="space-x-4">
-            <Link href="/onboarding/form/game" className="">
-              Onboarding
-            </Link>
-
-            <Link href="/dashboard" className="">
-              Dashboard
-            </Link>
-
-            {profile ? (
-              <>
-                <Link href="/login" className="">
-                  {profile?.Username}
-                </Link>
-              </>
-            ) : (
-              <Link href="/login" className="">
-                Login
-              </Link>
-            )}
+        <div className="my-auto flex flex-row gap-5">
+          <div className="my-auto hover:bg-secondary cursor-pointer p-2">
+            + create
           </div>
+          <div className="my-auto hover:bg-secondary cursor-pointer p-2">
+            dashboard
+          </div>
+          <Avatar className="cursor-pointer" src="/profile.png"></Avatar>
         </div>
+      </div>
+      <div className="h-1/5 bg-black text-[min(1.2vh,2vh)] text-center text-white font-extrabold flex items-center justify-center">
+        🎉 GRAND OPENING! 100% DISCOUNT ON ALL PURCHASES 🎉
       </div>
     </nav>
   );

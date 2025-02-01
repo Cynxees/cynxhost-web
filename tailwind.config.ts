@@ -1,6 +1,6 @@
 import { heroui } from "@heroui/react";
 import type { Config } from "tailwindcss";
-import { CustomLayoutTheme, DarkColorTheme } from "./config/theme";
+import { CustomLayoutTheme, LightColorTheme } from "./config/theme";
 
 export default {
   content: [
@@ -11,7 +11,7 @@ export default {
   ],
   theme: {
     extend: {
-      colors: DarkColorTheme,
+      colors: LightColorTheme,
       animation: {
         "pulse-brightness": "pulse-brightness 6s ease-in-out infinite",
       },
@@ -20,6 +20,13 @@ export default {
           "0%, 100%": { filter: "brightness(0.1)" },
           "50%": { filter: "brightness(0.3)" },
         },
+      },
+      fontFamily: {
+        inter: ["var(--font-inter)", "sans-serif"],
+        nats: ["var(--font-nats)", "sans-serif"],
+      },
+      dropShadow: {
+        heavy: "0 5px 5px rgba(0, 0, 0, 0.55)",
       },
     },
   },
@@ -31,7 +38,7 @@ export default {
       themes: {
         dark: {
           layout: CustomLayoutTheme,
-          colors: DarkColorTheme,
+          colors: LightColorTheme,
         },
       },
     }),
