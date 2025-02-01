@@ -45,10 +45,10 @@ export function DashboardSidebar() {
           className="m-2 ms-auto"
         >
           <motion.div
-            animate={{ rotate: isOpen ? 180 : 0 }}
+            animate={{ rotate: isOpen ? -180 : 0 }}
             transition={{ duration: openSpeed, ease: "easeInOut" }}
           >
-            <AltArrowLeft
+            <AltArrowRight
               color="content2"
               size={24}
               className="text-content2"
