@@ -9,11 +9,8 @@ export default function DashboardLayout({
     <div className="flex flex-row w-screen h-screen">
       <DashboardSidebar />
 
-      <div className="flex flex-col w-full ">
+      <div className="flex flex-col w-full h-screen">
         <DashboardTopbar />
-        <div>
-
-        </div>
         {children}
       </div>
     </div>
