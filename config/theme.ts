@@ -12,13 +12,23 @@ const LightPrimary: ColorScale = {
   "500": "#6D0000",
 };
 
+const LightContent3: ColorScale = {
+  DEFAULT: "#666666",
+  "50": "#999999",
+  "100": "#666666",
+  "200": "#4D4D4D",
+  "300": "#333333",
+  "400": "#1A1A1A",
+  "500": "#000000",
+};
+
 export const LightColorTheme: Partial<ThemeColors> = {
   primary: LightPrimary,
   secondary: "#FF9090",
 
   content1: "#383838", // black
   content2: "#FFFFFF", // white
-  content3: "#666666", // grey
+  content3: LightContent3, // grey
 
   divider: "#525252",
 

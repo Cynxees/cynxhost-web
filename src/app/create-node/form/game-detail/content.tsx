@@ -153,10 +153,6 @@ export default function GameDetailContent({
                   base: "bg-content2",
                   label: "!text-black",
                   listbox: "bg-content2",
-                  listboxWrapper: "bg-content2",
-                  mainWrapper: "bg-content2",
-                  helperWrapper: "bg-content2",
-                  innerWrapper: "bg-content2",
                   popoverContent: "bg-content2",
                 }}
               >

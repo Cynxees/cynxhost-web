@@ -36,7 +36,7 @@ const Navbar: React.FC = ({}) => {
             router.push("/");
           }}
           src="/cynx.png"
-          className="h-2/3 w-auto mt-auto cursor-pointer hover:opacity-60"
+          className="h-2/4 w-auto mt-7 cursor-pointer hover:opacity-60"
         />
 
         <div className="my-auto flex flex-row gap-5">

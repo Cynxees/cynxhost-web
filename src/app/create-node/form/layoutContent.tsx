@@ -28,15 +28,15 @@ const steps: Step[] = [
   },
   {
     route: "/create-node/form/tier",
-    text: "Tier",
+    text: "Pick your Server Tier",
     percent: 50,
-    title: "Choose your tier",
+    title: "Select Server Tier",
   },
   {
     route: "/create-node/form/confirm",
     text: "Confirm",
     percent: 90,
-    title: "Confirm",
+    title: "Confirm your Order",
   },
 ];
 
