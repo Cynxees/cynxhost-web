@@ -2,11 +2,13 @@
 
 import { Button, Image } from "@heroui/react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AltArrowLeft, AltArrowRight, MenuDots } from "solar-icon-set";
 
 export function DashboardSidebar() {
   const [isOpen, setIsOpen] = useState(true);
+  const router = useRouter();
 
   const openSpeed = 0.3;
 
@@ -18,19 +20,24 @@ export function DashboardSidebar() {
       className="flex flex-col h-screen bg-content4 shadow-lg overflow-hidden"
     >
       <div className="flex flex-row justify-between w-full">
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isOpen ? 1 : 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Image
-              src="/images/cynx_white.png"
-              className="ms-5 mt-auto max-w-[60%] translate-y-1/2"
-              radius="none"
-            />
-          </motion.div>
-        )}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isOpen ? 1 : 0 }}
+          transition={{
+            duration: isOpen ? openSpeed * 2 : openSpeed / 2,
+            ease: "easeInOut",
+          }}
+          className="origin-left"
+        >
+          <Image
+            src="/images/cynx_white.png"
+            className="ms-5 mt-auto max-w-[60%] translate-y-1/2 cursor-pointer"
+            radius="none"
+            onClick={() => {
+              router.push("/");
+            }}
+          />
+        </motion.div>
         <Button
           isIconOnly
           variant="light"
@@ -38,7 +45,7 @@ export function DashboardSidebar() {
           className="m-2 ms-auto"
         >
           <motion.div
-            animate={{ rotate: isOpen ? 180 : 0 }} // Rotate when open
+            animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: openSpeed, ease: "easeInOut" }}
           >
             <AltArrowLeft
