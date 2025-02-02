@@ -51,7 +51,8 @@ export interface InstanceType {
   UpdatedDate: Date;
   Name: string;
   VcpuCount: number;
-  MemorySizeMb: number;
+  MemorySizeGb: number;
+  NetworkSpeedMbps: number;
   ImagePath?: string;
   SpotPrice: number;
   SellPrice: number;

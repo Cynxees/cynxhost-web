@@ -56,7 +56,7 @@ const Navbar: React.FC = ({}) => {
           >
             dashboard
           </div>
-          <Avatar className="cursor-pointer" src="/profile.png"></Avatar>
+          <Avatar className="cursor-pointer" src="/images/default_avatar.png"></Avatar>
         </div>
       </div>
       <div className="h-1/5 bg-black text-[min(1.2vh,2vh)] text-center text-white font-extrabold flex items-center justify-center">

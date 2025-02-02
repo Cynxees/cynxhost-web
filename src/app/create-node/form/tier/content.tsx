@@ -68,9 +68,9 @@ export default function OnboardingTierContent({
                 onClick={() => onClickInstanceType(instanceType)}
               >
                 <TableCell>{instanceType.Name}</TableCell>
-                <TableCell>{instanceType.MemorySizeMb} GB</TableCell>
+                <TableCell>{instanceType.MemorySizeGb} GB</TableCell>
                 <TableCell>{instanceType.VcpuCount} vCPU</TableCell>
-                <TableCell>100 Mbps</TableCell>
+                <TableCell>{instanceType.NetworkSpeedMbps} Mbps</TableCell>
                 <TableCell>{instanceType.SellPrice}</TableCell>
               </TableRow>
             ))}
@@ -81,9 +81,9 @@ export default function OnboardingTierContent({
         <div className="flex flex-col ml-5 w-[30vw] bg-foreground rounded-sm drop-shadow-heavy h-full p-4">
           <h2 className="text-xl font-bold">{selectedInstanceType.Name}</h2>
           <p>ID: {selectedInstanceType.Id}</p>
-          <p>RAM: {selectedInstanceType.MemorySizeMb} GB</p>
+          <p>RAM: {selectedInstanceType.MemorySizeGb} GB</p>
           <p>CPU: {selectedInstanceType.VcpuCount} vCPU</p>
-          <p>Network: 100 Mbps</p>
+          <p>Network: {selectedInstanceType.NetworkSpeedMbps} Mbps</p>
           <p>Price: {selectedInstanceType.SellPrice}</p>
 
           <div className="absolute w-[80%] bottom-5 left-1/2 -translate-x-1/2">

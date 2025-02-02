@@ -6,12 +6,12 @@ export default function DashboardLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
   return (
-    <div className="flex flex-row w-screen h-screen">
+    <div className="flex flex-row w-full h-screen">
       <DashboardSidebar />
 
-      <div className="flex flex-col w-full h-screen">
+      <div className="flex flex-col h-screen w-full">
         <DashboardTopbar />
-        {children}
+        <div className="h-full w-full">{children}</div>
       </div>
     </div>
   );
