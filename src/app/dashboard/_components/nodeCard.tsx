@@ -2,7 +2,7 @@
 
 import { getPersistentNodeStatusDescription } from "@/app/_lib/helper/getPersistentNodeStatusDescription";
 import { PersistentNode } from "@/types/entity/entity";
-import { Button, Tooltip } from "@heroui/react";
+import { Button, Image, Tooltip } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -29,12 +29,15 @@ export default function NodeCard({ persistentNode }: Props) {
   }
 
   return (
-    <div className="bg-content2 h-[40vh] w-full mx-auto drop-shadow-heavy flex flex-col p-5">
+    <div className="bg-content2 h-[40vh] w-full mx-auto drop-shadow-heavy flex flex-col p-5 px-10">
       <div className="flex flex-row justify-between">
-        <div className="text-5xl font-nats">{persistentNode.ServerAlias}</div>
+        <div className="text-5xl font-nats relative">
+          <p>{persistentNode.ServerAlias}</p>
+          <p className="text-medium absolute -bottom-3">.cynx.buzz</p>
+        </div>
         <div className="flex flex-row gap-5">
           <Tooltip
-          closeDelay={100}
+            closeDelay={100}
             content={getPersistentNodeStatusDescription(persistentNode.Status)}
             classNames={{ content: "text-content2" }}
           >
@@ -55,6 +58,30 @@ export default function NodeCard({ persistentNode }: Props) {
           >
             ENTER
           </Button>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 w-full gap-5 my-auto">
+        <Tooltip
+          className="w-full"
+          closeDelay={0}
+          classNames={{ content: "text-content2" }}
+          content={persistentNode.ServerTemplate.Name}
+        >
+          <Image
+            src={persistentNode.ServerTemplate.ImageUrl}
+            className="w-full drop-shadow-heavy"
+            radius="none"
+          />
+        </Tooltip>
+        <div className="flex flex-col w-full text-2xl">
+          <p>{persistentNode.ServerTemplate.Name}</p>
+          <p className="text-content3">{persistentNode.InstanceType.Name}</p>
+          <div className="text-medium">
+            <p>RAM: {persistentNode.InstanceType.MemorySizeGb} GB</p>
+            <p>CPU: {persistentNode.InstanceType.VcpuCount} vCPU</p>
+            <p>Network: {persistentNode.InstanceType.NetworkSpeedMbps} Mbps</p>
+            <p>Price: {persistentNode.InstanceType.SellPrice}</p>
+          </div>
         </div>
       </div>
     </div>
