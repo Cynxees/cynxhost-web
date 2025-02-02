@@ -30,17 +30,17 @@ const dashboardPaths: Path[] = [
   },
   {
     icon: Server,
-    path: "/nodes",
+    path: "/dashboard/nodes",
     label: "Nodes",
   },
   {
     icon: File,
-    path: "/storage",
+    path: "/dashboard/storage",
     label: "Storage",
   },
   {
     icon: Bill,
-    path: "/billing",
+    path: "/dashboard/billing",
     label: "Billing",
   },
 ];
@@ -48,12 +48,12 @@ const dashboardPaths: Path[] = [
 const dashboardSecondaryPaths: Path[] = [
   {
     icon: Settings,
-    path: "/setting",
-    label: "Setting",
+    path: "/dashboard/settings",
+    label: "Settings",
   },
   {
     icon: QuestionCircle,
-    path: "/help",
+    path: "/dashboard/help",
     label: "Help",
   },
 ];
@@ -67,12 +67,50 @@ export function DashboardSidebar() {
 
   const openSpeed = 0.3;
 
+  function SidebarItem({
+    path,
+    isSelected,
+    isCollapsed,
+  }: {
+    path: Path;
+    isSelected?: boolean;
+    isCollapsed?: boolean;
+  }) {
+    return (
+      <motion.div
+        whileHover={{ scale: 1.05 }}
+        className={`py-2 rounded-lg bg-opacity-50 hover:bg-content3 text-content2 font-inter cursor-pointer flex items-center gap-3 transition-all duration-300 ${
+          isSelected ? "bg-content3" : ""
+        }`}
+        onClick={() => {
+          router.push(path.path);
+        }}
+      >
+        <path.icon className="!w-6 !h-6 text-content2 flex-shrink-0 ms-[0.2rem]" />
+
+        <motion.span
+          initial={{ opacity: 1, width: "auto" }}
+          animate={{
+            opacity: isCollapsed ? 1 : 0,
+            width: isCollapsed ? "auto" : 0,
+          }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className={`overflow-hidden whitespace-nowrap transition-all ${
+            isCollapsed ? "block" : "invisible"
+          }`}
+        >
+          {path.label}
+        </motion.span>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ width: "16rem" }}
       animate={{ width: isOpen ? "16rem" : "4rem" }}
       transition={{ duration: openSpeed, ease: "easeInOut" }}
-      className="flex flex-col h-screen bg-content4 shadow-lg overflow-hidden pt-5"
+      className="flex flex-col h-screen bg-content4 shadow-lg overflow-hidden pt-5 pb-2"
     >
       <div className="flex flex-row justify-between w-full">
         <motion.div
@@ -117,6 +155,7 @@ export function DashboardSidebar() {
         {dashboardPaths.map((path) => {
           return (
             <SidebarItem
+              key={path.path}
               path={path}
               isSelected={path.path === pathName}
               isCollapsed={isOpen}
@@ -131,6 +170,7 @@ export function DashboardSidebar() {
         {dashboardSecondaryPaths.map((path) => {
           return (
             <SidebarItem
+              key={path.path}
               path={path}
               isSelected={path.path === pathName}
               isCollapsed={isOpen}
@@ -138,41 +178,6 @@ export function DashboardSidebar() {
           );
         })}
       </div>
-    </motion.div>
-  );
-}
-
-function SidebarItem({
-  path,
-  isSelected,
-  isCollapsed,
-}: {
-  path: Path;
-  isSelected?: boolean;
-  isCollapsed?: boolean;
-}) {
-  return (
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      className={`py-2 rounded-lg bg-opacity-50 hover:bg-content3 text-content2 font-inter cursor-pointer flex items-center gap-3 transition-all duration-300 ${
-        isSelected ? "bg-content3" : ""
-      }`}
-    >
-      <path.icon className="!w-6 !h-6 text-content2 flex-shrink-0 ms-[0.2rem]" />
-
-      <motion.span
-        initial={{ opacity: 1, width: "auto" }}
-        animate={{
-          opacity: isCollapsed ? 1 : 0,
-          width: isCollapsed ? "auto" : 0,
-        }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className={`overflow-hidden whitespace-nowrap transition-all ${
-          isCollapsed ? "block" : "invisible"
-        }`}
-      >
-        {path.label}
-      </motion.span>
     </motion.div>
   );
 }
