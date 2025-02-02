@@ -7,9 +7,9 @@ import NodeProviders from "./provider";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
 
-interface Params {
+type Params = Promise<{
   id?: string;
-}
+}>
 
 export default async function DashboardNodeWrapper({
   params,
@@ -19,7 +19,8 @@ export default async function DashboardNodeWrapper({
   children: React.ReactNode;
 }) {
   // Get ID from URL search params
-  const id = parseInt(params.id || "");
+  const param = await params;
+  const id = parseInt(param.id || "");
   const cookieHeader = (await headers()).get("cookie") || "";
 
   if (!id || Array.isArray(id)) {

@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { AltArrowRight } from "solar-icon-set";
 import NodeCard from "../_components/nodeCard";
 import { PersistentNode } from "@/types/entity/entity";
 import { ScrollShadow } from "@heroui/react";
