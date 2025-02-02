@@ -21,6 +21,8 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useOnboarding } from "../../../_lib/hooks/useOnboarding";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "@/app/loading";
 
 export default function GameDetailContent({
   selectedGame,
@@ -36,6 +38,8 @@ export default function GameDetailContent({
   const [selectedVariables, setSelectedVariables] = useState<
     ServerTemplateScriptVariable[]
   >([]);
+
+  const [isValidatingVariables, setValidatingVariables] = useState(false);
 
   useEffect(() => {
     if (!parentId) return;
@@ -68,6 +72,8 @@ export default function GameDetailContent({
   const onClickSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setValidatingVariables(true);
+
     // Validate server template variables
     const request: Partial<CreatePersistentNodeRequest> = {
       ...state.request,
@@ -80,6 +86,7 @@ export default function GameDetailContent({
       request.serverTemplateId === undefined ||
       request.variables === undefined
     ) {
+      setValidatingVariables(false);
       return;
     }
 
@@ -89,20 +96,21 @@ export default function GameDetailContent({
     });
 
     if (result.code !== "SU") {
+      setValidatingVariables(false);
       console.error("Error validating server template variables");
       return;
     }
 
     setState({
       ...state,
+      selectedGame: selectedGame,
       request: request,
     });
-
     router.push(`/create-node/form/tier`);
   };
 
-  if (selectedGame == null) {
-    return <div>Loading...</div>;
+  if (selectedGame == null || isValidatingVariables) {
+    return <Loading />;
   }
 
   return (
@@ -178,9 +186,10 @@ export default function GameDetailContent({
         ></Image>
       </div>
 
-      <Image src="/images/decors/grey_mesh_corner.png" className="fixed bottom-0 right-0 -z-10 h-[70vh]">
-
-      </Image>
+      <Image
+        src="/images/decors/grey_mesh_corner.png"
+        className="fixed bottom-0 right-0 -z-10 h-[70vh]"
+      ></Image>
 
       <div className="fixed bottom-0 flex flex-row w-full pr-40 justify-between">
         <div></div>

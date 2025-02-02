@@ -22,9 +22,9 @@ const Navbar: React.FC = ({}) => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const hideNavbarRoutes = ["/login", "/register"];
+  const hideNavbarRoutes = ["dashboard"];
 
-  if (hideNavbarRoutes.includes(pathname)) {
+  if (hideNavbarRoutes.some((route) => pathname.includes(route))) {
     return null;
   }
 
@@ -40,13 +40,23 @@ const Navbar: React.FC = ({}) => {
         />
 
         <div className="my-auto flex flex-row gap-5">
-          <div className="my-auto hover:bg-secondary cursor-pointer p-2">
+          <div
+            onClick={() => {
+              router.push("/create-node/form/game");
+            }}
+            className="my-auto hover:bg-secondary cursor-pointer p-2"
+          >
             + create
           </div>
-          <div className="my-auto hover:bg-secondary cursor-pointer p-2">
+          <div
+            onClick={() => {
+              router.push("/dashboard");
+            }}
+            className="my-auto hover:bg-secondary cursor-pointer p-2"
+          >
             dashboard
           </div>
-          <Avatar className="cursor-pointer" src="/profile.png"></Avatar>
+          <Avatar className="cursor-pointer" src="/images/default_avatar.png"></Avatar>
         </div>
       </div>
       <div className="h-1/5 bg-black text-[min(1.2vh,2vh)] text-center text-white font-extrabold flex items-center justify-center">

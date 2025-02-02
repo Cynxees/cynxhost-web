@@ -29,6 +29,7 @@ export const LightColorTheme: Partial<ThemeColors> = {
   content1: "#383838", // black
   content2: "#FFFFFF", // white
   content3: LightContent3, // grey
+  content4: "#050505", // Dashboard Sidebar
 
   divider: "#525252",
 
@@ -40,11 +41,14 @@ export const LightColorTheme: Partial<ThemeColors> = {
   default: "#F6F6F6",
 
   // not set yet
-  success: "#d81159",
-  warning: "#d81159",
-  content4: "#d81159",
-  danger: "#d81159",
-  focus: "#d81159",
+  // success: {
+  //   DEFAULT: "17C964",
+  //   foreground: "#DDFFEC",
+  // },
+
+  // warning: "#d81159",
+  // danger: "#d81159",
+  // focus: "#d81159",
 };
 
 export const CustomLayoutTheme: Partial<LayoutTheme> = {};

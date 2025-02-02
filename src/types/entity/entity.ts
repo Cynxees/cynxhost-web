@@ -51,7 +51,8 @@ export interface InstanceType {
   UpdatedDate: Date;
   Name: string;
   VcpuCount: number;
-  MemorySizeMb: number;
+  MemorySizeGb: number;
+  NetworkSpeedMbps: number;
   ImagePath?: string;
   SpotPrice: number;
   SellPrice: number;
@@ -82,6 +83,16 @@ export interface Storage {
   Status: string;
 }
 
+export type PersistentNodeStatus =
+  | "RUNNING"
+  | "STOPPED"
+  | "SHUTDOWN"
+  | "CREATING"
+  | "SETUP"
+  | "STARTING"
+  | "STOPPING"
+  | "SHUTTING_DOWN";
+
 export interface PersistentNode {
   Id: number;
   CreatedDate: Date;
@@ -94,7 +105,7 @@ export interface PersistentNode {
   StorageId: number;
   ServerAlias: string;
   DnsRecordId?: string;
-  Status: string;
+  Status: PersistentNodeStatus;
   Owner: User;
   ServerTemplate: ServerTemplate;
   Instance?: Instance;

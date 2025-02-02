@@ -4,10 +4,12 @@ import { PersistentNode } from "@/types/entity/entity";
 import { BaseResponse } from "@/types/model/response";
 import { headers } from "next/headers";
 import NodeProviders from "./provider";
+import { Suspense } from "react";
+import Loading from "@/app/loading";
 
-interface Params {
+type Params = Promise<{
   id?: string;
-}
+}>
 
 export default async function DashboardNodeWrapper({
   params,
@@ -17,7 +19,8 @@ export default async function DashboardNodeWrapper({
   children: React.ReactNode;
 }) {
   // Get ID from URL search params
-  const id = parseInt(params.id || "");
+  const param = await params;
+  const id = parseInt(param.id || "");
   const cookieHeader = (await headers()).get("cookie") || "";
 
   if (!id || Array.isArray(id)) {
@@ -35,8 +38,10 @@ export default async function DashboardNodeWrapper({
   }
 
   return (
-    <NodeProviders node={nodeData.data}>
-      <div className="bg-foreground p-10 mt-10">{children}</div>;
-    </NodeProviders>
+    <Suspense fallback={<Loading />}>
+      <NodeProviders node={nodeData.data}>
+        <div className="bg-foreground p-10 mt-10">{children}</div>
+      </NodeProviders>
+    </Suspense>
   );
 }

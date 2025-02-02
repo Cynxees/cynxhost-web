@@ -44,7 +44,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${interFont.variable} ${natsFont.variable} ${monserratAlternateLightFont.variable} font-inter antialiased bg-background text-content1`}
+        className={`${interFont.variable} ${natsFont.variable} ${monserratAlternateLightFont.variable} font-inter antialiased bg-background text-content1 m-0 p-0 w-screen h-screen`}
       >
         <Providers>
           <Navbar />

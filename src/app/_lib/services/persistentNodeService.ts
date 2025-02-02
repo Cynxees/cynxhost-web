@@ -22,9 +22,11 @@ export async function CreatePersistentNode(
   return response;
 }
 
-export async function GetPersistentNodes(): Promise<PaginatePersistentNodeResponse> {
+export async function GetPersistentNodes(
+  options?: ServiceOptions
+): Promise<PaginatePersistentNodeResponse> {
   const response = await postData<null, PaginatePersistentNodeResponse>(
-    { path: "/persistent-node/show-owned" },
+    { path: "/persistent-node/show-owned", ...options },
     null
   );
 

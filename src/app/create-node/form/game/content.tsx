@@ -7,6 +7,7 @@ import { BreadcrumbItem, Breadcrumbs, Input, Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useOnboarding } from "../../../_lib/hooks/useOnboarding";
+import Loading from "@/app/loading";
 
 export default function OnboardingGameContent({
   games,
@@ -92,9 +93,7 @@ export default function OnboardingGameContent({
 
   if (loading) {
     return (
-      <div className="h-screen flex justify-center items-center">
-        <Spinner size="lg" color="current" />
-      </div>
+      <Loading />
     );
   }
 

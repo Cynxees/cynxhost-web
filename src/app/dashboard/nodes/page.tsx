@@ -1,10 +1,11 @@
 import { GetPersistentNodes } from "@/app/_lib/services/persistentNodeService";
-import DashboardContent from "./content";
-import { headers } from "next/headers";
+import { withCookie } from "@/app/_lib/services/withCookie";
 import { PersistentNode } from "@/types/entity/entity";
-import { withCookie } from "../_lib/services/withCookie";
+import { headers } from "next/headers";
+import NodeCard from "../_components/nodeCard";
+import NodesContent from "./content";
 
-export default async function Dashboard() {
+export default async function NodesPage() {
   const cookieHeader = (await headers()).get("cookie") || "";
 
   // Fetch data server-side
@@ -15,5 +16,5 @@ export default async function Dashboard() {
     nodesData = response.data.PersistentNodes;
   }
 
-  return <DashboardContent persistentNodes={nodesData}></DashboardContent>;
+  return <NodesContent nodesData={nodesData}></NodesContent>;
 }
