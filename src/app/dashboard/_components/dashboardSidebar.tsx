@@ -87,7 +87,6 @@ export function DashboardSidebar() {
         }}
       >
         <path.icon className="!w-6 !h-6 text-content2 flex-shrink-0 ms-[0.2rem]" />
-
         <motion.span
           initial={{ opacity: 1, width: "auto" }}
           animate={{

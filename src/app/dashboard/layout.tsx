@@ -11,7 +11,9 @@ export default function DashboardLayout({
 
       <div className="flex flex-col h-screen w-full">
         <DashboardTopbar />
-        <div className="h-full w-full">{children}</div>
+        <div className="h-full w-full relative">
+          <div className="h-full w-full absolute">{children}</div>
+        </div>
       </div>
     </div>
   );
