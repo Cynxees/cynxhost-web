@@ -137,13 +137,13 @@ export default function OnboardingGameContent({
           <Input
             isClearable
             placeholder="Search your game"
-            className="bg-white w-[20vw] ml-auto drop-shadow-heavy rounded-lg"
+            className="bg-white w-[20vw] ml-auto drop-shadow-medium rounded-lg"
           ></Input>
         </div>
       </div>
 
       <div className="flex flex-col items-start mt-12">
-        <div className="grid grid-cols-4 gap-4 w-full">
+        <div className="grid grid-cols-4 gap-6 w-full pb-[30vh]">
           {categories.map((category, index) => (
             <div
               key={category.Id}
