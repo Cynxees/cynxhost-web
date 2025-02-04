@@ -1,9 +1,12 @@
 "use client";
 
 import { getPersistentNodeStatusDescription } from "@/app/_lib/helper/getPersistentNodeStatusDescription";
+import { GetContainerStats } from "@/app/_lib/services/node/overviewService";
 import { PersistentNode } from "@/types/entity/entity";
+import { GetContainerStatsResponse } from "@/types/model/response";
 import { Button, Image, Tooltip } from "@heroui/react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type Props = {
   persistentNode: PersistentNode;
@@ -11,6 +14,7 @@ type Props = {
 
 export default function NodeCard({ persistentNode }: Props) {
   const router = useRouter();
+  const [stats, setStats] = useState<GetContainerStatsResponse>();
 
   let statusCss =
     "bg-warning-100 text-warning border-warning hover:bg-warning-50";
@@ -27,6 +31,13 @@ export default function NodeCard({ persistentNode }: Props) {
       statusCss = "bg-danger-100 text-danger border-danger hover:bg-danger-50";
       break;
   }
+
+  useEffect(() => {
+    console.log("NodeCard mounted");
+    GetContainerStats(persistentNode.ServerAlias).then((response) => {
+      setStats(response);
+    });
+  }, []);
 
   return (
     <div className="bg-content2 h-[40vh] w-full mx-auto drop-shadow-heavy flex flex-col p-5 px-10">
@@ -81,6 +92,19 @@ export default function NodeCard({ persistentNode }: Props) {
             <p>CPU: {persistentNode.InstanceType.VcpuCount} vCPU</p>
             <p>Network: {persistentNode.InstanceType.NetworkSpeedMbps} Mbps</p>
             <p>Price: {persistentNode.InstanceType.SellPrice}</p>
+            {stats && stats.data && (
+              <div>
+                <p>CPU Usage: {stats.data.CpuPercent}%</p>
+                <p>CPU Used: {stats.data.CpuUsed} cores</p>
+                <p>CPU Limit: {stats.data.CpuLimit} cores</p>
+                <p>RAM Usage: {stats.data.RamPercent}%</p>
+                <p>RAM Used: {stats.data.RamUsed} GB</p>
+                <p>RAM Limit: {stats.data.RamLimit} GB</p>
+                <p>Storage Usage: {stats.data.StoragePercent}%</p>
+                <p>Storage Used: {stats.data.StorageUsed} GB</p>
+                <p>Storage Limit: {stats.data.StorageLimit} GB</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
