@@ -83,7 +83,7 @@ export default function ConsolePage({}: Props) {
     }
 
     const socket = new WebSocket(
-      `wss://${node.ServerAlias}.cynx.buzz/ws/api/v1/persistent-node/logs?id=${sessionId}`
+      `wss://${node.ServerAlias}.cynx.buzz/cynxws/cynxapi/v1/persistent-node/logs?id=${sessionId}`
     );
 
     socket.onopen = () => console.log("WebSocket connected");

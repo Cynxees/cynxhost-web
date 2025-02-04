@@ -58,7 +58,7 @@ export const postNodeData = async <TRequest, TResponse = BaseResponse>(
     api.defaults.headers.Cookie = `AuthToken=${options.authToken}`;
   }
 
-  const baseURL = `https://${serverAlias}.cynx.buzz/api/v1`;
+  const baseURL = `https://${serverAlias}.cynx.buzz/cynxapi/v1`;
 
   const response = await axios.post<TResponse>(
     `${baseURL}${options.path}`,

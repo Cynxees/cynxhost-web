@@ -28,3 +28,19 @@ export type CheckUsernameRequest = {
 export type ConsoleCreateSessionResponse = BaseResponse<{
   SessionId: string;
 }>;
+
+export type GetContainerStatsResponse = BaseResponse<{
+  CpuPercent: number;
+  CpuUsed: number;
+  CpuLimit: number;
+  RamPercent: number;
+  RamUsed: number;
+  RamLimit: number;
+  StoragePercent: number;
+  StorageUsed: number;
+  StorageLimit: number;
+}>;
+
+export type SendSingleDockerCommandResponse = BaseResponse<{
+  Output: string;
+}>;
