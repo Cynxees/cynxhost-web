@@ -6,7 +6,10 @@ import { PersistentNode } from "@/types/entity/entity";
 import { GetContainerStatsResponse } from "@/types/model/response";
 import { Button, CircularProgress, Image, Tooltip } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
+import { useSpring } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import StatCard from "./statCard";
 
 type Props = {
   persistentNode: PersistentNode;
@@ -61,46 +64,33 @@ export default function NodeCard({ persistentNode }: Props) {
       break;
   }
 
-  const StatCard: React.FC<StatCardProps> = ({ percent, label, value, limit }) => {
-
-    return (
-      <div className="flex flex-row gap-2">
-        <CircularProgress value={percent} showValueLabel={true} classNames={{
-          svg: "w-36 h-36 drop-shadow-md",
-          value: "font-bold text-lg"
-        }} />
-        <div className="flex flex-col">
-          <p className="text-content3 font-bold text-sm">{label}</p>
-          <p className="text-sm">{value} / {limit}</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-content2 h-[40vh] w-full mx-auto drop-shadow-heavy flex flex-col p-5 px-10">
-      <div className="flex flex-row justify-between">
-        <div className="text-5xl font-nats relative">
+    <div className="bg-content2 h-[40vh] w-full mx-auto drop-shadow-heavy grid grid-cols-1 grid-rows-5 p-5 px-10">
+      <div className="row-span-1 flex flex-row justify-between w-full">
+        <div className="text-5xl font-nats relative w-1/2">
           <p>{persistentNode.ServerAlias}</p>
-          <p className="text-medium absolute -bottom-3">.cynx.buzz</p>
+          <p className="text-medium absolute -bottom-1">.cynx.buzz</p>
         </div>
-        <div className="flex flex-row gap-5">
-          <Tooltip
-            closeDelay={100}
-            content={getPersistentNodeStatusDescription(persistentNode.Status)}
-            classNames={{ content: "text-content2" }}
-          >
-            <Button
-              className={
-                `my-auto border-2 font-extrabold rounded-sm cursor-help ` +
-                statusCss
-              }
+        <div className="flex flex-row gap-5 w-1/2 justify-end">
+          <div className="w-1/3 my-auto">
+
+            <Tooltip
+              closeDelay={100}
+              content={getPersistentNodeStatusDescription(persistentNode.Status)}
+              classNames={{ content: "text-content2", base: "w-full" }}
             >
-              {persistentNode.Status}
-            </Button>
-          </Tooltip>
+              <Button
+                className={
+                  `my-auto border-2 font-extrabold rounded-sm cursor-help w-full ` +
+                  statusCss
+                }
+              >
+                {persistentNode.Status}
+              </Button>
+            </Tooltip>
+          </div>
           <Button
-            className="font-extrabold bg-primary text-content2 w-52 my-auto rounded-sm"
+            className="font-extrabold bg-primary text-content2 w-1/2 my-auto rounded-sm"
             onPress={() => {
               router.push(`/dashboard/node/${persistentNode.Id}`);
             }}
@@ -109,34 +99,38 @@ export default function NodeCard({ persistentNode }: Props) {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-2 w-full gap-5 my-auto">
-        <Tooltip
-          className="w-full"
-          closeDelay={0}
-          classNames={{ content: "text-content2" }}
-          content={persistentNode.ServerTemplate.Name}
-        >
-          <Image
-            src={persistentNode.ServerTemplate.ImageUrl}
-            className="w-full drop-shadow-heavy"
-            radius="none"
-          />
-        </Tooltip>
-        <div className="flex flex-col w-full text-2xl">
-          <p>{persistentNode.ServerTemplate.Name}</p>
-          <p className="text-content3">{persistentNode.InstanceType.Name}</p>
-          <div className="text-medium">
+      <div className="row-span-4 grid grid-cols-2 gap-5 my-auto h-full">
+        <div className="my-auto">
+          <Tooltip
+            className="w-full my-auto"
+            closeDelay={0}
+            classNames={{ content: "text-content2" }}
+            content={persistentNode.ServerTemplate.Name}
+          >
+            <Image
+              src={persistentNode.ServerTemplate.ImageUrl}
+              className="w-full drop-shadow-heavy my-auto"
+              radius="none"
+            />
+          </Tooltip>
+        </div>
+        <div className="flex flex-col gap-2 w-full xl:text-xl lg:text-lg md:text-md sm:text-sm text-xs h-full">
+          <div className="flex flex-col">
+            <p>{persistentNode.ServerTemplate.Name}</p>
+            <p className=" text-content3">{persistentNode.InstanceType.Name}</p>
 
-            <div className="grid grid-cols-2">
-              {stats && (
-                <>
-                  <StatCard percent={stats.CpuPercent} label="CPU Usage" value={`${stats.CpuUsed.toFixed(0)}%`} limit={`${stats.CpuLimit.toFixed(0)}%`} />
-                  <StatCard percent={stats.RamPercent} label="RAM Usage" value={`${stats.RamUsed.toFixed(2)} GB`} limit={`${stats.RamLimit.toFixed(2)} GB`} />
-                  <StatCard percent={stats.StoragePercent} label="Storage Usage" value={`${stats.StorageUsed.toFixed(2)} GB`} limit={`${stats.StorageLimit.toFixed(2)} GB`} />
-                </>
-              )}
+          </div>
 
-              {/* <p>CPU Usage: {stats.CpuPercent}%</p>
+          <div className="grid grid-cols-2 grid-rows-2 h-full ">
+            {stats && (
+              <>
+                <StatCard percent={stats.CpuPercent} label="CPU Usage" value={`${stats.CpuUsed.toFixed(0)}%`} limit={`${stats.CpuLimit.toFixed(0)}%`} />
+                <StatCard percent={stats.RamPercent} label="RAM Usage" value={`${stats.RamUsed.toFixed(2)} GB`} limit={`${stats.RamLimit.toFixed(2)} GB`} />
+                <StatCard percent={stats.StoragePercent} label="Storage Usage" value={`${stats.StorageUsed.toFixed(2)} GB`} limit={`${stats.StorageLimit.toFixed(2)} GB`} />
+              </>
+            )}
+
+            {/* <p>CPU Usage: {stats.CpuPercent}%</p>
                 <p>CPU Used: {stats.CpuUsed} cores</p>
                 <p>CPU Limit: {stats.CpuLimit} cores</p>
                 <p>RAM Usage: {stats.RamPercent}%</p>
@@ -145,9 +139,8 @@ export default function NodeCard({ persistentNode }: Props) {
                 <p>Storage Usage: {stats.StoragePercent}%</p>
                 <p>Storage Used: {stats.StorageUsed} GB</p>
                 <p>Storage Limit: {stats.StorageLimit} GB</p> */}
-            </div>
-
           </div>
+
         </div>
       </div>
     </div>
