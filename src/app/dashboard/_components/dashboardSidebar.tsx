@@ -64,6 +64,8 @@ function SidebarItem({ path, currentPath, isCollapsed, nodeId }: { path: Path, c
       return
     }
 
+    setIsSelected(false);
+
   }, [currentPath])
 
   return (
