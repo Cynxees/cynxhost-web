@@ -1,8 +1,8 @@
 "use client";
 
-import NodeCard from "../_components/nodeCard";
 import { PersistentNode } from "@/types/entity/entity";
 import { ScrollShadow } from "@heroui/react";
+import NodeCard from "../_components/nodeCard";
 
 export default function NodesContent({
   nodesData,

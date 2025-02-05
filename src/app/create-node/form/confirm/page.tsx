@@ -12,7 +12,7 @@ export default function OnboardingConfirmPage() {
 
   if (
     state.request.instanceTypeId == undefined ||
-    state.request.storageSizeMb == undefined ||
+    state.request.storageSizeGb == undefined ||
     state.request.serverTemplateId === undefined
   ) {
     router.push("/create-node/form/game");
@@ -24,7 +24,7 @@ export default function OnboardingConfirmPage() {
 
     if (
       req.instanceTypeId == undefined ||
-      req.storageSizeMb == undefined ||
+      req.storageSizeGb == undefined ||
       req.serverTemplateId === undefined ||
       req.name == undefined ||
       req.serverAlias == undefined
@@ -34,7 +34,7 @@ export default function OnboardingConfirmPage() {
 
     const res = await CreatePersistentNode({
       instanceTypeId: req.instanceTypeId!,
-      storageSizeMb: req.storageSizeMb!,
+      storageSizeGb: req.storageSizeGb!,
       serverTemplateId: req.serverTemplateId!,
       name: req.name!,
       serverAlias: req.serverAlias!,
@@ -52,7 +52,7 @@ export default function OnboardingConfirmPage() {
   return (
     <div>
       <p>instance id: {state.request.instanceTypeId}</p>
-      <p>storage : {state.request.storageSizeMb}</p>
+      <p>storage : {state.request.storageSizeGb}</p>
       <p>template id :{state.request.serverTemplateId}</p>
 
       <Input

@@ -1,28 +1,25 @@
 "use client";
 
 import {
-  getServerTemplateById,
-  validateServerTemplateVariables,
+    getServerTemplateById,
+    validateServerTemplateVariables,
 } from "@/app/_lib/services/serverTemplateService";
+import Loading from "@/app/loading";
 import { ServerTemplate } from "@/types/entity/entity";
 import {
-  CreatePersistentNodeRequest,
-  ServerTemplateScriptVariable,
+    CreatePersistentNodeRequest,
+    ServerTemplateScriptVariable,
 } from "@/types/model/request";
 import {
-  Button,
-  Divider,
-  Form,
-  Image,
-  Select,
-  SelectItem,
-  Slider,
+    Button,
+    Form,
+    Image,
+    Select,
+    SelectItem
 } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useOnboarding } from "../../../_lib/hooks/useOnboarding";
-import { useQuery } from "@tanstack/react-query";
-import Loading from "@/app/loading";
 
 export default function GameDetailContent({
   selectedGame,
@@ -79,7 +76,7 @@ export default function GameDetailContent({
       ...state.request,
       serverTemplateId: state.selectedGame?.Id,
       variables: selectedVariables,
-      storageSizeMb: selectedStorageSize,
+      storageSizeGb: selectedStorageSize,
     };
 
     if (

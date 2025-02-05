@@ -15,7 +15,7 @@ export type ServerTemplateScriptVariable = {
 
 export type CreatePersistentNodeRequest = {
   serverTemplateId: number;
-  storageSizeMb: number;
+  storageSizeGb: number;
   instanceTypeId: number;
   serverAlias: string;
   name: string;

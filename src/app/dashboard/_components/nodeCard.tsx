@@ -4,17 +4,46 @@ import { getPersistentNodeStatusDescription } from "@/app/_lib/helper/getPersist
 import { GetContainerStats } from "@/app/_lib/services/node/overviewService";
 import { PersistentNode } from "@/types/entity/entity";
 import { GetContainerStatsResponse } from "@/types/model/response";
-import { Button, Image, Tooltip } from "@heroui/react";
+import { Button, CircularProgress, Image, Tooltip } from "@heroui/react";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 type Props = {
   persistentNode: PersistentNode;
 };
 
+type StatCardProps = {
+  percent: number;
+  label: string;
+  value: string;
+  limit: string;
+};
+
 export default function NodeCard({ persistentNode }: Props) {
   const router = useRouter();
-  const [stats, setStats] = useState<GetContainerStatsResponse>();
+
+  const {
+    data: stats,
+    isLoading: isStatsLoading,
+    refetch,
+  } = useQuery<GetContainerStatsResponse['data']>({
+    queryKey: ["stats-" + persistentNode.Id],
+    queryFn: async () => {
+      try {
+        const response = await GetContainerStats(persistentNode.ServerAlias)
+
+        if (!response || !response.data) {
+          throw new Error("Fail fetch persistent node stats")
+        }
+
+        return response.data;
+      } catch (error) {
+        console.error("Failed to fetch persistent node", error);
+        throw error;
+      }
+    },
+    refetchInterval: 1000
+  });
 
   let statusCss =
     "bg-warning-100 text-warning border-warning hover:bg-warning-50";
@@ -32,12 +61,21 @@ export default function NodeCard({ persistentNode }: Props) {
       break;
   }
 
-  useEffect(() => {
-    console.log("NodeCard mounted");
-    GetContainerStats(persistentNode.ServerAlias).then((response) => {
-      setStats(response);
-    });
-  }, []);
+  const StatCard: React.FC<StatCardProps> = ({ percent, label, value, limit }) => {
+
+    return (
+      <div className="flex flex-row gap-2">
+        <CircularProgress value={percent} showValueLabel={true} classNames={{
+          svg: "w-36 h-36 drop-shadow-md",
+          value: "font-bold text-lg"
+        }} />
+        <div className="flex flex-col">
+          <p className="text-content3 font-bold text-sm">{label}</p>
+          <p className="text-sm">{value} / {limit}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-content2 h-[40vh] w-full mx-auto drop-shadow-heavy flex flex-col p-5 px-10">
@@ -88,23 +126,27 @@ export default function NodeCard({ persistentNode }: Props) {
           <p>{persistentNode.ServerTemplate.Name}</p>
           <p className="text-content3">{persistentNode.InstanceType.Name}</p>
           <div className="text-medium">
-            <p>RAM: {persistentNode.InstanceType.MemorySizeGb} GB</p>
-            <p>CPU: {persistentNode.InstanceType.VcpuCount} vCPU</p>
-            <p>Network: {persistentNode.InstanceType.NetworkSpeedMbps} Mbps</p>
-            <p>Price: {persistentNode.InstanceType.SellPrice}</p>
-            {stats && stats.data && (
-              <div>
-                <p>CPU Usage: {stats.data.CpuPercent}%</p>
-                <p>CPU Used: {stats.data.CpuUsed} cores</p>
-                <p>CPU Limit: {stats.data.CpuLimit} cores</p>
-                <p>RAM Usage: {stats.data.RamPercent}%</p>
-                <p>RAM Used: {stats.data.RamUsed} GB</p>
-                <p>RAM Limit: {stats.data.RamLimit} GB</p>
-                <p>Storage Usage: {stats.data.StoragePercent}%</p>
-                <p>Storage Used: {stats.data.StorageUsed} GB</p>
-                <p>Storage Limit: {stats.data.StorageLimit} GB</p>
-              </div>
-            )}
+
+            <div className="grid grid-cols-2">
+              {stats && (
+                <>
+                  <StatCard percent={stats.CpuPercent} label="CPU Usage" value={`${stats.CpuUsed.toFixed(0)}%`} limit={`${stats.CpuLimit.toFixed(0)}%`} />
+                  <StatCard percent={stats.RamPercent} label="RAM Usage" value={`${stats.RamUsed.toFixed(2)} GB`} limit={`${stats.RamLimit.toFixed(2)} GB`} />
+                  <StatCard percent={stats.StoragePercent} label="Storage Usage" value={`${stats.StorageUsed.toFixed(2)} GB`} limit={`${stats.StorageLimit.toFixed(2)} GB`} />
+                </>
+              )}
+
+              {/* <p>CPU Usage: {stats.CpuPercent}%</p>
+                <p>CPU Used: {stats.CpuUsed} cores</p>
+                <p>CPU Limit: {stats.CpuLimit} cores</p>
+                <p>RAM Usage: {stats.RamPercent}%</p>
+                <p>RAM Used: {stats.RamUsed} GB</p>
+                <p>RAM Limit: {stats.RamLimit} GB</p>
+                <p>Storage Usage: {stats.StoragePercent}%</p>
+                <p>Storage Used: {stats.StorageUsed} GB</p>
+                <p>Storage Limit: {stats.StorageLimit} GB</p> */}
+            </div>
+
           </div>
         </div>
       </div>
