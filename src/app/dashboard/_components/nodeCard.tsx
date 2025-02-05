@@ -4,11 +4,9 @@ import { getPersistentNodeStatusDescription } from "@/app/_lib/helper/getPersist
 import { GetContainerStats } from "@/app/_lib/services/node/overviewService";
 import { PersistentNode } from "@/types/entity/entity";
 import { GetContainerStatsResponse } from "@/types/model/response";
-import { Button, CircularProgress, Image, Tooltip } from "@heroui/react";
+import { Button, Image, Tooltip } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useSpring } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import StatCard from "./statCard";
 
 type Props = {
@@ -93,7 +91,7 @@ export default function NodeCard({ persistentNode }: Props) {
           <Button
             className="font-extrabold bg-primary text-content2 w-1/2 my-auto rounded-sm"
             onPress={() => {
-              router.push(`/dashboard/node/${persistentNode.Id}`);
+              router.push(`/dashboard/nodes/${persistentNode.Id}`);
             }}
           >
             ENTER

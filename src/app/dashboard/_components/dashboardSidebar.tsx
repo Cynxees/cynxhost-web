@@ -3,7 +3,7 @@
 import { Button, Divider, Image } from "@heroui/react";
 import { motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
-import { useState, useMemo, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   AltArrowRight,
   Bill,
@@ -32,30 +32,15 @@ const dashboardSecondaryPaths: Path[] = [
   { icon: QuestionCircle, path: "/dashboard/help", label: "Help" },
 ];
 
-const nodeDashboardPaths: Path[] = [
-  { icon: Home, path: "/dashboard/node/[id]/overview", label: "Overview" },
-  { icon: Server, path: "/dashboard/node/[id]/console", label: "Console" },
-  { icon: File, path: "/dashboard/node/[id]/files", label: "Files" },
-  { icon: File, path: "/dashboard/node/[id]/backups", label: "Backups" },
-  { icon: Bill, path: "/dashboard/node/[id]/billing", label: "Billing" },
-  { icon: Settings, path: "/dashboard/node/[id]/settings", label: "Settings" },
-  { icon: QuestionCircle, path: "/dashboard/node/[id]/help", label: "Help" },
-];
-
-function SidebarItem({ path, currentPath, isCollapsed, nodeId }: { path: Path, currentPath: string, nodeId: string | null, isCollapsed?: boolean }) {
+function SidebarItem({ path, currentPath, isCollapsed }: { path: Path, currentPath: string, isCollapsed?: boolean }) {
 
   const [isSelected, setIsSelected] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
 
-    if (path.path === "/dashboard/nodes" && currentPath.startsWith("/dashboard/node/")) {
+    if (path.path === "/dashboard/nodes" && currentPath.startsWith("/dashboard/nodes/")) {
       setIsSelected(true);
-      return
-    }
-
-    if (path.path.includes('[id]')) {
-      setIsSelected(path.path.replace('[id]', nodeId ?? "0") === currentPath);
       return
     }
 
@@ -74,9 +59,7 @@ function SidebarItem({ path, currentPath, isCollapsed, nodeId }: { path: Path, c
       className={`py-2 rounded-lg bg-opacity-50 hover:bg-content3 text-content2 font-inter cursor-pointer flex items-center gap-3 transition-all duration-300 ${isSelected ? "bg-content3" : ""
         }`}
       onClick={() => {
-        // Check if path includes [id] and replace with nodeId
-        const targetPath = path.path.includes("[id]") ? path.path.replace("[id]", nodeId ?? "0") : path.path;
-        router.push(targetPath);
+        router.push(path.path);
       }}
     >
       <path.icon className="!w-6 !h-6 text-content2 flex-shrink-0 ms-[0.2rem]" />
@@ -95,20 +78,13 @@ function SidebarItem({ path, currentPath, isCollapsed, nodeId }: { path: Path, c
 export function DashboardSidebar() {
   const [isOpen, setIsOpen] = useState(true);
   const pathName = usePathname();
-  console.log("path:", pathName);
   const router = useRouter();
 
   const openSpeed = 0.3;
 
-  // Check if we are in a node details page (/dashboard/node/[id]/*)
+  // Check if we are in a node details page (/dashboard/nodes/[id]/*)
   const isNodeDashboard = useMemo(() => {
-    return pathName.startsWith("/dashboard/node/");
-  }, [pathName]);
-
-  const nodeId = useMemo(() => {
-    // Match pattern to extract nodeId from the path `/dashboard/node/[id]/<subpath>`
-    const match = pathName.match(/^\/dashboard\/node\/([^/]+)\//);
-    return match ? match[1] : null;
+    return pathName.startsWith("/dashboard/nodes/");
   }, [pathName]);
 
   return (
@@ -152,7 +128,7 @@ export function DashboardSidebar() {
 
         <div className="flex flex-col gap-2 p-4">
           {dashboardPaths.map((path) => (
-            <SidebarItem key={path.path} path={path} currentPath={pathName} nodeId={nodeId} isCollapsed={isOpen} />
+            <SidebarItem key={path.path} path={path} currentPath={pathName} isCollapsed={isOpen} />
           ))}
         </div>
 
@@ -160,27 +136,11 @@ export function DashboardSidebar() {
 
         <div className="flex flex-col gap-2 p-4">
           {dashboardSecondaryPaths.map((path) => (
-            <SidebarItem key={path.path} path={path} currentPath={pathName} nodeId={nodeId} isCollapsed={isOpen} />
+            <SidebarItem key={path.path} path={path} currentPath={pathName} isCollapsed={isOpen} />
           ))}
         </div>
       </motion.div>
 
-      {/* Node Sidebar (Only appears when in a node page) */}
-      {isNodeDashboard && (
-        <motion.div
-          initial={{ x: "-100%", width: "0rem" }}
-          animate={{ x: 0, width: "12rem" }}
-          exit={{ x: "-100%", width: "0rem" }}
-          transition={{ duration: openSpeed, ease: "easeInOut" }}
-          className="flex flex-col h-screen bg-content3-400 shadow-lg overflow-hidden pt-5 pb-2 drop-shadow-heavy z-10"
-        >
-          <div className="flex flex-col gap-2 p-4">
-            {nodeDashboardPaths.map((path) => (
-              <SidebarItem key={path.path} path={path} currentPath={pathName} nodeId={nodeId} isCollapsed={true} />
-            ))}
-          </div>
-        </motion.div>
-      )}
     </div>
   );
 }

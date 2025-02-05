@@ -2,11 +2,16 @@
 
 import { useAuth } from "@/app/_lib/hooks/useAuth";
 import { Avatar } from "@heroui/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
-export function DashboardTopbar() {
+export function DashboardTopbar({isNodeDashboard}: {isNodeDashboard: boolean}) {
   const router = useRouter();
+  const pathName = usePathname();
   const { profileData } = useAuth();
+
+  if(pathName.startsWith("/dashboard/nodes/") && !isNodeDashboard) {
+    return null;
+  }
 
   return (
     <div className="w-full h-[10vh] bg-foreground flex flex-row justify-end drop-shadow-medium pe-20">

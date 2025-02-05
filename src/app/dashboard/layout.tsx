@@ -10,7 +10,7 @@ export default function DashboardLayout({
       <DashboardSidebar />
 
       <div className="flex flex-col h-screen w-full">
-        <DashboardTopbar />
+        <DashboardTopbar isNodeDashboard={false} />
         <div className="h-full w-full relative">
           <div className="h-full w-full absolute">{children}</div>
         </div>

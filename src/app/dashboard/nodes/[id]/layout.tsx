@@ -6,6 +6,8 @@ import { headers } from "next/headers";
 import NodeProviders from "./provider";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
+import { NodeSidebar } from "./_components/nodeSidebar";
+import { DashboardTopbar } from "../../_components/dashboardTopbar";
 
 type Params = Promise<{
   id?: string;
@@ -40,7 +42,13 @@ export default async function DashboardNodeWrapper({
   return (
     <Suspense fallback={<Loading />}>
       <NodeProviders node={nodeData.data}>
-        <div className="bg-foreground p-10 mt-10">{children}</div>
+        <div className="w-full h-full flex flex-row">
+          <NodeSidebar />
+          <div className="h-full w-full flex flex-col">
+            <DashboardTopbar isNodeDashboard={true} />
+            {children}
+          </div>
+        </div>
       </NodeProviders>
     </Suspense>
   );
