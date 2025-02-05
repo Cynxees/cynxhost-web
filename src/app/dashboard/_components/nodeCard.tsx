@@ -45,7 +45,8 @@ export default function NodeCard({ persistentNode }: Props) {
         throw error;
       }
     },
-    refetchInterval: 1000
+    refetchInterval: 1000,
+    enabled: (persistentNode.Status === "RUNNING"),
   });
 
   let statusCss =
