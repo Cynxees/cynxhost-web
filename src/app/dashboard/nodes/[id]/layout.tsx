@@ -46,7 +46,9 @@ export default async function DashboardNodeWrapper({
           <NodeSidebar />
           <div className="h-full w-full flex flex-col">
             <DashboardTopbar isNodeDashboard={true} />
-            {children}
+            <div className="h-full w-full relative">
+              <div className="h-full w-full absolute">{children}</div>
+            </div>
           </div>
         </div>
       </NodeProviders>

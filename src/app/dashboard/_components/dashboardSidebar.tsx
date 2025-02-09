@@ -84,7 +84,12 @@ export function DashboardSidebar() {
 
   // Check if we are in a node details page (/dashboard/nodes/[id]/*)
   const isNodeDashboard = useMemo(() => {
-    return pathName.startsWith("/dashboard/nodes/");
+    const result = pathName.startsWith("/dashboard/nodes/");
+
+    if (result) {
+      setIsOpen(false);
+    }
+    return result;
   }, [pathName]);
 
   return (
@@ -113,7 +118,13 @@ export function DashboardSidebar() {
           <Button
             isIconOnly
             variant="light"
-            onPress={() => setIsOpen(!isOpen)}
+            onPress={() => {
+              if (isNodeDashboard) {
+                setIsOpen(false)
+                router.push("/dashboard/nodes")
+              };
+              setIsOpen(!isOpen)
+            }}
             className="m-2 ms-auto"
           >
             <motion.div
