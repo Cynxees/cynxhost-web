@@ -42,7 +42,7 @@ export default async function DashboardNodeWrapper({
   return (
     <Suspense fallback={<Loading />}>
       <NodeProviders node={nodeData.data}>
-        <div className="w-full h-full flex flex-row">
+        <div className="w-full h-screen flex flex-row overflow-y-hidden">
           <NodeSidebar />
           <div className="h-full w-full flex flex-col">
             <DashboardTopbar isNodeDashboard={true} />

@@ -36,3 +36,28 @@ export type SendCommandNodeSessionRequest = {
 export type NodeCreateSessionRequest = {
   shell: string;
 };
+
+export type DownloadFileRequest = {
+  filePath: string;
+};
+
+export type RemoveFileRequest = {
+  filePath: string;
+};
+
+export type UploadFileRequest = {
+  destinationPath: string;
+  fileName: string;
+};
+
+export type ListDirectoryRequest = {
+  directoryPath: string;
+};
+
+export type CreateDirectoryRequest = {
+  directoryPath: string;
+};
+
+export type RemoveDirectoryRequest = {
+  directoryPath: string;
+};

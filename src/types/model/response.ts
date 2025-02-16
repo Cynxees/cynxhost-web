@@ -44,3 +44,14 @@ export type GetContainerStatsResponse = BaseResponse<{
 export type SendSingleDockerCommandResponse = BaseResponse<{
   Output: string;
 }>;
+
+export type File = {
+  Filename: string;
+  CreatedAt: string;
+  UpdatedAt: string;
+  Size: number;
+};
+
+export type ListDirectoryResponse = BaseResponse<{
+  Files: File[];
+}>;
