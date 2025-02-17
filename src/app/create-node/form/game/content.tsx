@@ -1,13 +1,15 @@
 "use client";
 
 import GameCard from "@/app/_components/gameCard";
+import { useDebounce } from "@/app/_lib/hooks/useDebounce";
+import { searchModrinthProjects } from "@/app/_lib/services/modrinth/modrinthService";
 import { paginateServerCategory } from "@/app/_lib/services/serverTemplateService";
+import Loading from "@/app/loading";
 import { ServerTemplateCategory } from "@/types/entity/entity";
-import { BreadcrumbItem, Breadcrumbs, Input, Spinner } from "@heroui/react";
+import { BreadcrumbItem, Breadcrumbs, Input } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useOnboarding } from "../../../_lib/hooks/useOnboarding";
-import Loading from "@/app/loading";
 
 export default function OnboardingGameContent({
   games,
@@ -18,30 +20,59 @@ export default function OnboardingGameContent({
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { state, setState } = useOnboarding();
+  const [searchInput, setSearchInput] = useState("");
+  const debouncedSearch = useDebounce(searchInput, 500);
+
 
   useEffect(() => {
     const fetchCategories = async () => {
-      try {
-        if (state.selectedCategory == null || state.selectedCategory.Id == 0) {
-          const result = await paginateServerCategory({ page: 1, size: 10 });
-          setCategories(result.data?.ServerTemplateCategories || []);
-        } else {
-          const result = await paginateServerCategory({
-            page: 1,
-            size: 10,
-            Id: state.selectedCategory.Id,
-          });
-          setCategories(result.data?.ServerTemplateCategories || []);
-        }
-      } catch (error) {
-        console.error("Error fetching server template categories:", error);
-      } finally {
-        setLoading(false);
+
+      const finalCategories = [];
+      if (state.selectedCategory == null || state.selectedCategory.Id == 0) {
+        const result = await paginateServerCategory({ page: 1, size: 10, keyword: debouncedSearch });
+        finalCategories.push(...result.data?.ServerTemplateCategories || []);
+      } else {
+        const result = await paginateServerCategory({
+          page: 1,
+          size: 10,
+          Id: state.selectedCategory.Id,
+          keyword: debouncedSearch,
+        });
+        finalCategories.push(...result.data?.ServerTemplateCategories || []);
       }
+
+      // add modrinth categories
+      const modrinthCategories = await searchModrinthProjects({
+        limit: 100,
+        facets: { project_type: "modpack" },
+        query: debouncedSearch,
+      });
+      if (!modrinthCategories.hits) {
+        setCategories(finalCategories);
+        setLoading(false);
+        return
+      }
+
+      modrinthCategories.hits.forEach((category) => {
+        const templateCategory: ServerTemplateCategory = {
+          Id: 0,
+          Name: category.title,
+          ParentId: 0,
+          Description: category.description,
+          ImageUrl: category.icon_url,
+          Type: "MODRINTH",
+        };
+
+        console.log("category", templateCategory);
+        finalCategories.push(templateCategory);
+      })
+
+      setCategories(finalCategories);
+      setLoading(false);
     };
 
     fetchCategories();
-  }, [state]);
+  }, [state, debouncedSearch]);
 
   const changeCategory = async (category?: ServerTemplateCategory) => {
     setCategories([]);
@@ -138,6 +169,8 @@ export default function OnboardingGameContent({
             isClearable
             placeholder="Search your game"
             className="bg-white w-[20vw] ml-auto drop-shadow-medium rounded-lg"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
           ></Input>
         </div>
       </div>
@@ -146,7 +179,7 @@ export default function OnboardingGameContent({
         <div className="grid grid-cols-4 gap-6 w-full pb-[30vh]">
           {categories.map((category, index) => (
             <div
-              key={category.Id}
+              key={category.Name}
               className={`col-span-1 ${index >= 4 ? "justify-start" : ""}`}
             >
               <GameCard game={category} onClick={onClickCategory} />

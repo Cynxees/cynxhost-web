@@ -36,13 +36,14 @@ export interface ServerTemplate {
   }>;
 }
 
-export interface ServerTemplateCategory {
+export type ServerTemplateCategory = {
   Id: number;
   Name: string;
   Description?: string;
   ParentId: number;
   ImageUrl?: string;
   ServerTemplateId?: number;
+  Type?: "MODRINTH"
 }
 
 export interface InstanceType {

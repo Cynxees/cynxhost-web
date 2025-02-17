@@ -1,8 +1,8 @@
 import { BaseResponse } from "@/types/model/response";
 import { FetchOption } from "@/types/service/option";
 import axios from "axios";
-import { snakeCase } from "lodash";
 import https from "https";
+import { snakeCase } from "lodash";
 
 const agent = new https.Agent({
   rejectUnauthorized: false, // Disables SSL verification
@@ -42,6 +42,28 @@ export const postData = async <TRequest, TResponse = BaseResponse>(
   }
 
   const response = await api.post<TResponse>(options.path, snakeCaseData);
+  console.log(options.path, " : ", response.data);
+  return response.data;
+};
+
+export const getModrinthData = async <TResponse = BaseResponse>(
+  options: FetchOption,
+): Promise<ApiResponse<TResponse>> => {
+  console.log("fetching: ", options.path);
+  
+  if (options.authToken) {
+    api.defaults.headers.Cookie = `AuthToken=${options.authToken}`;
+  }
+
+  const baseURL = `https://api.modrinth.com/v2`;
+
+  const response = await axios.get<TResponse>(
+    `${baseURL}${options.path}`,
+    {
+      httpsAgent: agent,
+    }
+  );
+
   console.log(options.path, " : ", response.data);
   return response.data;
 };
