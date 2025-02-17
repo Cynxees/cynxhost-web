@@ -5,7 +5,7 @@ import { useDebounce } from "@/app/_lib/hooks/useDebounce";
 import { searchModrinthProjects } from "@/app/_lib/services/modrinth/modrinthService";
 import { paginateServerCategory } from "@/app/_lib/services/serverTemplateService";
 import Loading from "@/app/loading";
-import { ServerTemplateCategory } from "@/types/entity/entity";
+import { ServerTemplateCategory, ServerTemplateCategoryDisplay } from "@/types/entity/entity";
 import { BreadcrumbItem, Breadcrumbs, Input } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,9 +14,9 @@ import { useOnboarding } from "../../../_lib/hooks/useOnboarding";
 export default function OnboardingGameContent({
   games,
 }: {
-  games: ServerTemplateCategory[];
+  games: ServerTemplateCategoryDisplay[];
 }) {
-  const [categories, setCategories] = useState<ServerTemplateCategory[]>(games);
+  const [categories, setCategories] = useState<ServerTemplateCategoryDisplay[]>(games);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { state, setState } = useOnboarding();
@@ -27,18 +27,27 @@ export default function OnboardingGameContent({
   useEffect(() => {
     const fetchCategories = async () => {
 
-      const finalCategories = [];
-      if (state.selectedCategory == null || state.selectedCategory.Id == 0) {
+      setCategories([]);
+
+      const finalCategories: ServerTemplateCategoryDisplay[] = [];
+      const parentId = typeof state.selectedCategory?.Id === "number" ? state.selectedCategory?.Id : 0;
+
+      if (state.selectedCategory == null || state.selectedCategory.Id == '0') {
         const result = await paginateServerCategory({ page: 1, size: 10, keyword: debouncedSearch });
-        finalCategories.push(...result.data?.ServerTemplateCategories || []);
+        if (result.data?.ServerTemplateCategories) {
+          finalCategories.push(...result.data.ServerTemplateCategories);
+        }
       } else {
         const result = await paginateServerCategory({
           page: 1,
           size: 10,
-          Id: state.selectedCategory.Id,
+          Id: parentId,
           keyword: debouncedSearch,
         });
-        finalCategories.push(...result.data?.ServerTemplateCategories || []);
+
+        if (result.data?.ServerTemplateCategories) {
+          finalCategories.push(...result.data.ServerTemplateCategories);
+        }
       }
 
       // add modrinth categories
@@ -46,6 +55,8 @@ export default function OnboardingGameContent({
         limit: 100,
         facets: { project_type: "modpack" },
         query: debouncedSearch,
+        index: "follows",
+        
       });
       if (!modrinthCategories.hits) {
         setCategories(finalCategories);
@@ -54,11 +65,11 @@ export default function OnboardingGameContent({
       }
 
       modrinthCategories.hits.forEach((category) => {
-        const templateCategory: ServerTemplateCategory = {
-          Id: 0,
+        const templateCategory: ServerTemplateCategoryDisplay = {
+          Id: category.project_id,
           Name: category.title,
           ParentId: 0,
-          Description: category.description,
+          Description: category.versions[0],
           ImageUrl: category.icon_url,
           Type: "MODRINTH",
         };
@@ -74,7 +85,7 @@ export default function OnboardingGameContent({
     fetchCategories();
   }, [state, debouncedSearch]);
 
-  const changeCategory = async (category?: ServerTemplateCategory) => {
+  const changeCategory = async (category?: ServerTemplateCategoryDisplay) => {
     setCategories([]);
     setState({
       ...state,
@@ -82,7 +93,7 @@ export default function OnboardingGameContent({
     });
   };
 
-  const onClickCategory = async (category: ServerTemplateCategory) => {
+  const onClickCategory = async (category: ServerTemplateCategoryDisplay) => {
     setLoading(true);
 
     try {
@@ -176,7 +187,7 @@ export default function OnboardingGameContent({
       </div>
 
       <div className="flex flex-col items-start mt-12">
-        <div className="grid grid-cols-4 gap-6 w-full pb-[30vh]">
+        <div className="grid grid-cols-6 gap-x-4 gap-y-10 w-full pb-[30vh]">
           {categories.map((category, index) => (
             <div
               key={category.Name}

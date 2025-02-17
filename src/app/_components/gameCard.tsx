@@ -1,44 +1,53 @@
 "use client";
 
-import { ServerTemplateCategory } from "@/types/entity/entity";
+import { ServerTemplateCategory, ServerTemplateCategoryDisplay } from "@/types/entity/entity";
 import { Card, CardFooter, Image } from "@heroui/react";
 import React from "react";
 import { motion } from "framer-motion";
 
-interface GameCardProps {
-  game: ServerTemplateCategory;
-  onClick: (game: ServerTemplateCategory) => void;
+interface GameCardProps<T = ServerTemplateCategoryDisplay | ServerTemplateCategory> {
+  game: T;
+  onClick: (game: T) => void;
 }
 
 const GameCard: React.FC<GameCardProps> = ({ game, onClick }) => {
   return (
     <motion.div
       initial={{ scale: 1, zIndex: 0 }}
-      whileHover={{ scale: 1.05, zIndex: 10 }}
+      whileHover={{ scale: 1.02, zIndex: 10 }}
       transition={{ type: "spring", stiffness: 300, damping: 15 }}
+      className="w-full relative h-full"
     >
       <Card
         isPressable
         isBlurred
-        radius="none"
-        className="animate-appearance-in hover:outline-white hover:outline-offset-0 hover:outline-4 hover:brightness-125 hover:z-10 w-full h-64 relative"
+        radius="lg"
+        className="animate-appearance-in hover:outline-white hover:outline-offset-0 hover:outline-4 hover:brightness-105 w-full h-full flex flex-col pt-3 bg-gray-200  drop-shadow-heavy"
         onPress={() => onClick(game)}
       >
-        <Image
-          src={game.ImageUrl}
-          alt={game.Name}
-          className="w-full h-full fixed object-cover"
-          radius="none"
-        />
+        {/* Image Container maintains square ratio */}
+        <div className="w-full aspect-square relative">
+          <Image
+            src={game.ImageUrl}
+            alt={game.Name}
+            className={"object-cover w-[90%] left-1/2 -translate-x-1/2 fixed aspect-square bg-white " + (game.ImageUrl?.endsWith("png") ? "p-5" : "")}
+            radius="lg"
+          />
+        </div>
+        {/* Game Name */}
+        <div className="w-[80%] mx-auto mb-5">
+          <div className="font-nats text-2xl text-content4 text-start">
+            {game.Name}
+          </div>
+          <div className="font-nats text-sm text-content1 text-start">
+            {game.Description}
+          </div>
 
-        <div className="absolute bottom-0 left-0 w-full h-[90%] bg-gradient-to-t from-black/90 to-transparent z-10"></div>
-
-        <CardFooter className="absolute bottom-0 font-nats text-[2rem] left-2 z-20 text-white">
-          {game.Name}
-        </CardFooter>
+        </div>
       </Card>
     </motion.div>
   );
+
 };
 
 export default GameCard;

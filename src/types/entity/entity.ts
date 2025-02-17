@@ -43,8 +43,22 @@ export type ServerTemplateCategory = {
   ParentId: number;
   ImageUrl?: string;
   ServerTemplateId?: number;
-  Type?: "MODRINTH"
-}
+  Type: "DEFAULT";
+};
+
+export type ServerTemplateCategoryModrinth = {
+  Id: string;
+  Name: string;
+  Description?: string;
+  ParentId: number;
+  ImageUrl?: string;
+  ServerTemplateId?: number;
+  Type: "MODRINTH";
+};
+
+export type ServerTemplateCategoryDisplay =
+  | ServerTemplateCategory
+  | ServerTemplateCategoryModrinth;
 
 export interface InstanceType {
   Id: number;

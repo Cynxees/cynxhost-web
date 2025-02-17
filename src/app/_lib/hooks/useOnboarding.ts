@@ -1,12 +1,12 @@
-import { ServerTemplate, ServerTemplateCategory } from "@/types/entity/entity";
+import { ServerTemplate, ServerTemplateCategory, ServerTemplateCategoryDisplay } from "@/types/entity/entity";
 import { CreatePersistentNodeRequest } from "@/types/model/request";
 import { createContext, useContext } from "react";
 
 // Define the shared state type
 export interface OnboardingState {
-  parentHistory: ServerTemplateCategory[];
+  parentHistory: ServerTemplateCategoryDisplay[];
   selectedGame?: ServerTemplate;
-  selectedCategory?: ServerTemplateCategory;
+  selectedCategory?: ServerTemplateCategoryDisplay;
 
   request: Partial<CreatePersistentNodeRequest>;
 }
