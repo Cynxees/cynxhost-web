@@ -6,6 +6,7 @@ export type SearchProjectsRequest = {
   facets?: SearchProjectsFacets;
   limit?: number;
   index?: "relevance" | "downloads" | "follows" | "newest" | "updated";
+  offset?: number;
 };
 
 export type SearchProjectsFacets = {
@@ -34,6 +35,10 @@ export async function searchModrinthProjects(
 
   if (request.index) {
     params.append("index", request.index);
+  }
+
+  if (request.offset) {
+    params.append("offset", request.offset.toString());
   }
 
   const response = await getModrinthData<ModrinthSearchProjectsResponse>({

@@ -5,10 +5,10 @@ import { useDebounce } from "@/app/_lib/hooks/useDebounce";
 import { searchModrinthProjects } from "@/app/_lib/services/modrinth/modrinthService";
 import { paginateServerCategory } from "@/app/_lib/services/serverTemplateService";
 import Loading from "@/app/loading";
-import { ServerTemplateCategory, ServerTemplateCategoryDisplay } from "@/types/entity/entity";
+import { ServerTemplateCategoryDisplay, ServerTemplateCategoryModrinth } from "@/types/entity/entity";
 import { BreadcrumbItem, Breadcrumbs, Input } from "@heroui/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useOnboarding } from "../../../_lib/hooks/useOnboarding";
 
 export default function OnboardingGameContent({
@@ -18,21 +18,25 @@ export default function OnboardingGameContent({
 }) {
   const [categories, setCategories] = useState<ServerTemplateCategoryDisplay[]>(games);
   const [loading, setLoading] = useState(true);
+  const [lazyLoading, setLazyLoading] = useState(false);
+  const [modrinthPage, setModrinthPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const router = useRouter();
   const { state, setState } = useOnboarding();
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 500);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
-
+  // Fetch initial categories (server + modrinth page 1)
   useEffect(() => {
     const fetchCategories = async () => {
-
-      setCategories([]);
-
+      setLoading(true);
+      setModrinthPage(1);
       const finalCategories: ServerTemplateCategoryDisplay[] = [];
       const parentId = typeof state.selectedCategory?.Id === "number" ? state.selectedCategory?.Id : 0;
 
-      if (state.selectedCategory == null || state.selectedCategory.Id == '0') {
+      // Fetch server categories
+      if (!state.selectedCategory || state.selectedCategory.Id === '0') {
         const result = await paginateServerCategory({ page: 1, size: 10, keyword: debouncedSearch });
         if (result.data?.ServerTemplateCategories) {
           finalCategories.push(...result.data.ServerTemplateCategories);
@@ -44,39 +48,42 @@ export default function OnboardingGameContent({
           Id: parentId,
           keyword: debouncedSearch,
         });
-
         if (result.data?.ServerTemplateCategories) {
           finalCategories.push(...result.data.ServerTemplateCategories);
         }
       }
 
-      // add modrinth categories
-      const modrinthCategories = await searchModrinthProjects({
-        limit: 100,
+      // Fetch first page of modrinth categories
+      const modrinthResult = await searchModrinthProjects({
+        limit: 10,
         facets: { project_type: "modpack" },
         query: debouncedSearch,
+        // Assuming the API accepts an offset or page parameter; here we assume page-based pagination.
+        offset: 0,
         index: "follows",
-        
       });
-      if (!modrinthCategories.hits) {
-        setCategories(finalCategories);
-        setLoading(false);
-        return
+
+      if (modrinthResult.hits && modrinthResult.hits.length > 0) {
+        modrinthResult.hits.forEach((category) => {
+          const templateCategory: ServerTemplateCategoryDisplay = {
+            Id: category.project_id, // unique modrinth id
+            Name: category.title,
+            ParentId: 0,
+            Description: category.description,
+            ImageUrl: category.icon_url,
+            Type: "MODRINTH",
+          };
+          finalCategories.push(templateCategory);
+        });
+        // If fewer than 10 results, assume no more pages.
+        if (modrinthResult.hits.length < 10) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
+      } else {
+        setHasMore(false);
       }
-
-      modrinthCategories.hits.forEach((category) => {
-        const templateCategory: ServerTemplateCategoryDisplay = {
-          Id: category.project_id,
-          Name: category.title,
-          ParentId: 0,
-          Description: category.versions[0],
-          ImageUrl: category.icon_url,
-          Type: "MODRINTH",
-        };
-
-        console.log("category", templateCategory);
-        finalCategories.push(templateCategory);
-      })
 
       setCategories(finalCategories);
       setLoading(false);
@@ -84,6 +91,62 @@ export default function OnboardingGameContent({
 
     fetchCategories();
   }, [state, debouncedSearch]);
+
+  // Lazy load additional modrinth categories when the sentinel is visible
+  useEffect(() => {
+    if (!hasMore || loading) return;
+
+    const observer = new IntersectionObserver(
+      async (entries) => {
+        if (entries[0].isIntersecting && !lazyLoading) {
+          setLazyLoading(true);
+          const nextPage = modrinthPage + 1;
+          // Calculate offset based on page (assuming 10 per page)
+          const offset = (nextPage - 1) * 10;
+          const modrinthResult = await searchModrinthProjects({
+            limit: 10,
+            facets: { project_type: "modpack" },
+            query: debouncedSearch,
+            offset,
+            index: "follows",
+          });
+          if (modrinthResult.hits && modrinthResult.hits.length > 0) {
+            const newCategories: ServerTemplateCategoryModrinth[] = modrinthResult.hits.map((category) => ({
+              Id: category.project_id,
+              Name: category.title,
+              ParentId: 0,
+              Description: category.description,
+              ImageUrl: category.icon_url,
+              Type: "MODRINTH",
+            }));
+            // Append the new modrinth categories
+            setCategories((prev) => [...prev, ...newCategories]);
+            setModrinthPage(nextPage);
+            if (modrinthResult.hits.length < 10) {
+              setHasMore(false);
+            }
+          } else {
+            setHasMore(false);
+          }
+          setLazyLoading(false);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 1.0,
+      }
+    );
+    const currentSentinel = sentinelRef.current;
+    if (currentSentinel) {
+      observer.observe(currentSentinel);
+    }
+    return () => {
+      if (currentSentinel) {
+        observer.unobserve(currentSentinel);
+      }
+    };
+  }, [hasMore, modrinthPage, debouncedSearch, lazyLoading, loading]);
 
   const changeCategory = async (category?: ServerTemplateCategoryDisplay) => {
     setCategories([]);
@@ -95,17 +158,13 @@ export default function OnboardingGameContent({
 
   const onClickCategory = async (category: ServerTemplateCategoryDisplay) => {
     setLoading(true);
-
     try {
       if (category.ServerTemplateId != null) {
         router.push(
-          `/create-node/form/game-detail?id=${encodeURIComponent(
-            category.ServerTemplateId
-          )}`
+          `/create-node/form/game-detail?id=${encodeURIComponent(category.ServerTemplateId)}`
         );
         return;
       }
-
       changeCategory(category);
       state.parentHistory.push(category);
     } catch (error) {
@@ -119,12 +178,8 @@ export default function OnboardingGameContent({
     if (state.parentHistory.length === 0) {
       return;
     }
-
     const lastParent = state.parentHistory[state.parentHistory.length - 2];
-    state.parentHistory = state.parentHistory.slice(
-      0,
-      state.parentHistory.length - 1
-    );
+    state.parentHistory = state.parentHistory.slice(0, state.parentHistory.length - 1);
     changeCategory(lastParent);
   };
 
@@ -134,9 +189,7 @@ export default function OnboardingGameContent({
   };
 
   if (loading) {
-    return (
-      <Loading />
-    );
+    return <Loading />;
   }
 
   return (
@@ -152,7 +205,7 @@ export default function OnboardingGameContent({
                     onPress={() =>
                       onClickBreadcrumb(state.parentHistory.indexOf(category))
                     }
-                    className={`cursor-pointer `}
+                    className="cursor-pointer"
                     color="primary"
                   >
                     {category.Name}
@@ -164,15 +217,7 @@ export default function OnboardingGameContent({
 
           <div className="relative items-center justify-center flex">
             <div className="relative">
-              {/* <AltArrowLeft
-                className="my-auto cursor-pointer hover:scale-105 absolute -left-10"
-                size={30}
-                onClick={onClickBack}
-                color="black"
-              /> */}
-              {/* <h1 className="my-auto text-center justify-center text-5xl font-nats">
-                Select Starting Template
-              </h1> */}
+              {/* Optional back button or title */}
             </div>
           </div>
 
@@ -182,21 +227,24 @@ export default function OnboardingGameContent({
             className="bg-white w-[20vw] ml-auto drop-shadow-medium rounded-lg"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-          ></Input>
+          />
         </div>
       </div>
 
       <div className="flex flex-col items-start mt-12">
         <div className="grid grid-cols-6 gap-x-4 gap-y-10 w-full pb-[30vh]">
           {categories.map((category, index) => (
-            <div
-              key={category.Name}
-              className={`col-span-1 ${index >= 4 ? "justify-start" : ""}`}
-            >
+            <div key={category.Id || `${category.Name}-${index}`} className="col-span-1">
               <GameCard game={category} onClick={onClickCategory} />
             </div>
           ))}
         </div>
+        {/* Sentinel element for lazy loading */}
+        {hasMore ? (
+          <div ref={sentinelRef} className="w-full h-10 flex justify-center items-center mb-[10vh] bg-red-300">
+            {lazyLoading && <div>Loading more...</div>}
+          </div>
+        ): <div>no more</div>}
       </div>
     </>
   );
