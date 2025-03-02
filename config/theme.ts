@@ -33,7 +33,7 @@ export const LightColorTheme: Partial<ThemeColors> = {
 
   divider: "#525252",
 
-  background: "#E2E3E3", // Background for every page
+  background: "#EFF0F0", // Background for every page
   foreground: "#FFFFFF", // Like second bg, for cards etca
 
   overlay: "#d81159",
